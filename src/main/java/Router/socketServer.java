@@ -8,20 +8,24 @@ import java.nio.channels.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class socketServer implements Runnable {
 
-    // userBuffer for later user
-    List<userBuffer> readableUserBuffer = new ArrayList<userBuffer>();
-    List<userBuffer> threadUserBuffer = new ArrayList<userBuffer>();
+    // userBuffer for valid userPackets (avoid invalid/lost packets)
+    public List<userBuffer> readableUserBuffer = new ArrayList<userBuffer>();
+
+    // threadPackets to avoid invalid/incomplete packets
+    private List<userBuffer> threadUserBuffer = new ArrayList<userBuffer>();
 
     // server vars
-    public  String serverThreadName;
+    private ServerSocketChannel serverSocketChannel = null;
+    private Selector selector;
     private Thread serverThread;
+    private String serverThreadName;
 
-    public ServerSocketChannel      serverSocketChannel  = null;
-    public Selector                 selector             = null;
-    public SelectionKey             key                  = null;
+    // selection key for thread
+    private SelectionKey key = null;
 
 
     public socketServer(int port, String serverName) throws IOException {
@@ -56,12 +60,13 @@ public class socketServer implements Runnable {
                 // checks if any incoming keys
                 if (selector.select() <= 0) continue;
 
-                // iterates through all keys in selector
-                Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
+                //   iterates through all keys in selector
+                Set<SelectionKey> selectedKeys = selector.selectedKeys();
+                Iterator<SelectionKey> iterator = selectedKeys.iterator();
                 while (iterator.hasNext()) {
                     // gets next key
                     key = (SelectionKey) iterator.next();
-
+                    iterator.remove();
                     // checks for incoming connections
                     if (key.isAcceptable()) keyAcceptable();
 
@@ -87,7 +92,7 @@ public class socketServer implements Runnable {
 
     // reads incoming messages using unique keys
     private void keyReadable() throws IOException {
-        SocketChannel sc = (SocketChannel) key.channel();
+        SocketChannel sc = (SocketChannel) this.key.channel();
         ByteBuffer bb = ByteBuffer.allocate(1024);
         sc.read(bb);
         String result = new String(bb.array()).trim();

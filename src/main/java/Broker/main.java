@@ -10,6 +10,6 @@ public class main {
         connection.send("bruh2");
         connection.send("bruh3");
         connection.send("bruh4");
-        connection.close();
+//        connection.close();
     }
 }

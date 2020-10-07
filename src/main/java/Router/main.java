@@ -11,8 +11,8 @@ public class main {
             socketServer marketServer = new socketServer(5001,"Market");
 
             // router shit happens here
-            brokerServer.readableUserBuffer.size();
-            marketServer.readableUserBuffer.size();
+            brokerServer.readBuffer();
+            marketServer.readBuffer();
         } catch (IOException e) {
             e.printStackTrace();
         }

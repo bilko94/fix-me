@@ -19,7 +19,7 @@ public class connect {
             System.out.println("Connected");
 
             // takes input from terminal
-            input  = new DataInputStream(System.in);
+//            input  = new DataInputStream(System.in);
 
             // sends output to the socket
             out    = new DataOutputStream(socket.getOutputStream());
@@ -44,7 +44,7 @@ public class connect {
 
     public void close(){
         try {
-            input.close();
+//            input.close();
             out.close();
             socket.close();
         } catch(IOException i) {
