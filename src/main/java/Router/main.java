@@ -6,8 +6,13 @@ public class main {
     public static void main( String[] args )
     {
         try {
+            // init servers
             socketServer brokerServer = new socketServer(5000,"Broker");
-            socketServer MarketServer = new socketServer(5001,"Market");
+            socketServer marketServer = new socketServer(5001,"Market");
+
+            // router shit happens here
+            brokerServer.readableUserBuffer.size();
+            marketServer.readableUserBuffer.size();
         } catch (IOException e) {
             e.printStackTrace();
         }

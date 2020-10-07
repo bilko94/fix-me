@@ -1,7 +1,5 @@
 package Router;
 
-import Socket.host;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -10,18 +8,20 @@ import java.nio.channels.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class socketServer implements Runnable {
 
+    // userBuffer for later user
     List<userBuffer> readableUserBuffer = new ArrayList<userBuffer>();
     List<userBuffer> threadUserBuffer = new ArrayList<userBuffer>();
-    public String serverThreadName;
+
+    // server vars
+    public  String serverThreadName;
     private Thread serverThread;
 
+    public ServerSocketChannel      serverSocketChannel  = null;
     public Selector                 selector             = null;
     public SelectionKey             key                  = null;
-    public ServerSocketChannel      serverSocketChannel  = null;
 
 
     public socketServer(int port, String serverName) throws IOException {
@@ -48,7 +48,7 @@ public class socketServer implements Runnable {
     private void writeBuffer(){}
     public void readBuffer(){}
 
-    // server send / receive thread
+    // server thread (send / receive)
     @Override
     public void run() {
         try {
