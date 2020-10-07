@@ -13,22 +13,17 @@ import java.util.Set;
 public class socketServer implements Runnable {
 
     // userBuffer for valid userPackets (avoid invalid/lost packets)
-    public List<userBuffer> readableUserBuffer = new ArrayList<userBuffer>();
+    public List<userBuffer> readableUserBuffer = new ArrayList<>();
 
     // threadPackets to avoid invalid/incomplete packets
-    private List<userBuffer> threadUserBuffer = new ArrayList<userBuffer>();
+    private List<userBuffer> threadUserBuffer = new ArrayList<>();
 
     // server vars
-    private ServerSocketChannel serverSocketChannel = null;
-    private Selector selector;
-    private Thread serverThread;
-    private String serverThreadName;
+    private final ServerSocketChannel serverSocketChannel;
+    private final Selector selector;
+    private SelectionKey key;
 
-    // selection key for thread
-    private SelectionKey key = null;
-
-
-    public socketServer(int port, String serverName) throws IOException {
+    public socketServer(int port, String serverThreadName) throws IOException {
         // server config
         serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.configureBlocking(false);
@@ -40,11 +35,8 @@ public class socketServer implements Runnable {
         selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-        // assigning server thread name
-        serverThreadName = serverName;
-
         // starting thread
-        serverThread = new Thread (this, serverThreadName);
+        Thread serverThread = new Thread(this, serverThreadName);
         serverThread.start();
     }
 
@@ -60,22 +52,18 @@ public class socketServer implements Runnable {
                 // checks if any incoming keys
                 if (selector.select() <= 0) continue;
 
-                //   iterates through all keys in selector
-                Set<SelectionKey> selectedKeys = selector.selectedKeys();
-                Iterator<SelectionKey> iterator = selectedKeys.iterator();
-                while (iterator.hasNext()) {
-                    // gets next key
-                    key = (SelectionKey) iterator.next();
-                    iterator.remove();
+                // iterates through keys
+                for (SelectionKey key : selector.selectedKeys()){
                     // checks for incoming connections
-                    if (key.isAcceptable()) keyAcceptable();
+                    if (key.isAcceptable()) keyAcceptable(key);
 
                     // checks for incoming data
-                    if (key.isReadable()) keyReadable();
+                    if (key.isReadable()) keyReadable(key);
+
+                    // removes processed key
+                    selector.selectedKeys().remove(key);
                 }
             }
-        } catch (ClosedChannelException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,16 +71,16 @@ public class socketServer implements Runnable {
 
     // <<< under construction >>>
     // assigns keys to connected streams
-    private void keyAcceptable() throws IOException {
+    private void keyAcceptable(SelectionKey key) throws IOException {
         SocketChannel sc = serverSocketChannel.accept();
         sc.configureBlocking(false);
-        sc.register(selector, SelectionKey.OP_READ);
+        sc.register(selector, key.OP_READ);
         System.out.println("Connection Accepted: " + sc.getLocalAddress() + "\n");
     }
 
     // reads incoming messages using unique keys
-    private void keyReadable() throws IOException {
-        SocketChannel sc = (SocketChannel) this.key.channel();
+    private void keyReadable(SelectionKey key) throws IOException {
+        SocketChannel sc = (SocketChannel) key.channel();
         ByteBuffer bb = ByteBuffer.allocate(1024);
         sc.read(bb);
         String result = new String(bb.array()).trim();
