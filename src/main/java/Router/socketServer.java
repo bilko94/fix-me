@@ -6,20 +6,13 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class socketServer implements Runnable {
 
-    // userBuffer for valid userPackets (avoid invalid/lost packets)
-    public List<userBuffer> readableUserBuffer = new ArrayList<>();
-
-    // threadPackets to avoid invalid/incomplete packets
-    private List<userBuffer> threadUserBuffer = new ArrayList<>();
-
     // server vars
     private final ServerSocketChannel serverSocketChannel;
+    private final channel ConnectedChannel = new channel();
     private final Selector selector;
     private SelectionKey key;
 
@@ -34,6 +27,7 @@ public class socketServer implements Runnable {
         // init non blocking buffer
         selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
 
         // starting thread
         Thread serverThread = new Thread(this, serverThreadName);
@@ -70,11 +64,21 @@ public class socketServer implements Runnable {
     }
 
     // <<< under construction >>>
+
+    //TODO make times messages in connection client
+    //TODO figure out how to manage users
+    //TODO grind aim in CSGO
+    //TODO make cheese sandwich
+    //TODO make non blocking connection client
+    //TODO make connection client mutlThreaded
+    //gg
+
     // assigns keys to connected streams
     private void keyAcceptable(SelectionKey key) throws IOException {
         SocketChannel sc = serverSocketChannel.accept();
         sc.configureBlocking(false);
         sc.register(selector, key.OP_READ);
+        ConnectedChannel.add(sc);
         System.out.println("Connection Accepted: " + sc.getLocalAddress() + "\n");
     }
 
@@ -91,5 +95,9 @@ public class socketServer implements Runnable {
             sc.close();
             System.out.println("Connection closed...");
         }
+    }
+
+    private void keyWritable(SelectionKey key) throws IOException {
+
     }
 }
