@@ -1,6 +1,6 @@
 package Router;
 
-import socket.host;
+import Socket.host;
 
 import java.io.IOException;
 
@@ -9,7 +9,8 @@ public class main {
     {
         System.out.println( "Hello World! router" );
         try {
-            host server = new host(5000);
+            socketServer server = new socketServer(5000,64);
+            server.run();
             System.out.println("hi");
         } catch (IOException e) {
             e.printStackTrace();
