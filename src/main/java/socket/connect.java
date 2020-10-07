@@ -13,56 +13,42 @@ public class connect {
     private DataOutputStream out     = null;
 
     public connect(String address, int port){
+        try
         {
-            // establish a connection
-            try
-            {
-                socket = new Socket(address, port);
-                System.out.println("Connected");
+            socket = new Socket(address, port);
+            System.out.println("Connected");
 
-                // takes input from terminal
-                input  = new DataInputStream(System.in);
+            // takes input from terminal
+            input  = new DataInputStream(System.in);
 
-                // sends output to the socket
-                out    = new DataOutputStream(socket.getOutputStream());
-            }
-            catch(UnknownHostException u)
-            {
-                System.out.println(u);
-            }
-            catch(IOException i)
-            {
-                System.out.println(i);
-            }
+            // sends output to the socket
+            out    = new DataOutputStream(socket.getOutputStream());
+        }
+        catch(UnknownHostException u)
+        {
+            System.out.println(u);
+        }
+        catch(IOException i)
+        {
+            System.out.println(i);
+        }
+    }
 
-            // string to read message from input
-            String line = "";
+    public void send(String message){
+        try {
+            out.writeUTF(message);
+        } catch(IOException i) {
+            System.out.println(i);
+        }
+    }
 
-            // keep reading until "Over" is input
-            while (!line.equals("Over"))
-            {
-                try
-                {
-                    line = input.readLine();
-                    out.writeUTF(line);
-                }
-                catch(IOException i)
-                {
-                    System.out.println(i);
-                }
-            }
-
-            // close the connection
-            try
-            {
-                input.close();
-                out.close();
-                socket.close();
-            }
-            catch(IOException i)
-            {
-                System.out.println(i);
-            }
+    public void close(){
+        try {
+            input.close();
+            out.close();
+            socket.close();
+        } catch(IOException i) {
+            System.out.println(i);
         }
     }
 }
