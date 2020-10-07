@@ -10,17 +10,25 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class socketServer implements Runnable {
     List<userBuffer> readableUserBuffer1 = new ArrayList<userBuffer>();
     List<userBuffer> threadUserBuffer1 = new ArrayList<userBuffer>();
+    public String serverThreadName;
+    private Thread serverThread;
     host server = null;
-    int serverTickRate = 64;
 
 
-    socketServer(int port, int serverTickRate) throws IOException {
-        this.server = new host(port);
-        this.serverTickRate = serverTickRate;
+    socketServer(String serverName) throws IOException {
+        if (serverName.equals("Broker")){
+            this.server = new host(5000);
+        }
+        else if (serverName.equals("Market")) {
+            this.server = new host(5001);
+        }
+        serverThreadName = serverName;
+        start();
     }
 
     private void writeBuffer(){}
@@ -54,11 +62,18 @@ public class socketServer implements Runnable {
         }
     }
 
+    public void start() {
+        System.out.println(serverThreadName + " Server");
+        if (serverThread == null) {
+            serverThread = new Thread (this, serverThreadName);
+            serverThread.start();
+        }
+    }
+
     private void keyAcceptable() throws IOException {
         SocketChannel sc = this.server.serverSocketChannel.accept();
         sc.configureBlocking(false);
-        sc.register(this.server.selector, SelectionKey.
-                OP_READ);
+        sc.register(this.server.selector, SelectionKey.OP_READ);
         System.out.println("Connection Accepted: " + sc.getLocalAddress() + "\n");
     }
 
