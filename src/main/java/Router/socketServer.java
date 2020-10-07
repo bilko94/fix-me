@@ -1,58 +1,72 @@
 package Router;
 
 import Socket.host;
+
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 public class socketServer implements Runnable {
-    List<userBuffer> readableUserBuffer1 = new ArrayList<userBuffer>();
-    List<userBuffer> threadUserBuffer1 = new ArrayList<userBuffer>();
+
+    List<userBuffer> readableUserBuffer = new ArrayList<userBuffer>();
+    List<userBuffer> threadUserBuffer = new ArrayList<userBuffer>();
     public String serverThreadName;
     private Thread serverThread;
-    host server = null;
+
+    public Selector                 selector             = null;
+    public SelectionKey             key                  = null;
+    public ServerSocketChannel      serverSocketChannel  = null;
 
 
-    socketServer(String serverName) throws IOException {
-        if (serverName.equals("Broker")){
-            this.server = new host(5000);
-        }
-        else if (serverName.equals("Market")) {
-            this.server = new host(5001);
-        }
+    public socketServer(int port, String serverName) throws IOException {
+        // server config
+        serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel.configureBlocking(false);
+
+        // setup server listening port
+        serverSocketChannel.bind(new InetSocketAddress(InetAddress.getByName("localhost"), port));
+
+        // init non blocking buffer
+        selector = Selector.open();
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+        // assigning server thread name
         serverThreadName = serverName;
-        start();
+
+        // starting thread
+        serverThread = new Thread (this, serverThreadName);
+        serverThread.start();
     }
 
+    // for later (for sending and receiving messages)
     private void writeBuffer(){}
     public void readBuffer(){}
 
+    // server send / receive thread
     @Override
     public void run() {
         try {
             while (true) {
-                if (this.server.selector.select() <= 0){
-                    continue;
-                }
-                Set<SelectionKey> selectedKeys = this.server.selector.selectedKeys();
-                Iterator<SelectionKey> iterator = selectedKeys.iterator();
+                // checks if any incoming keys
+                if (selector.select() <= 0) continue;
+
+                // iterates through all keys in selector
+                Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
                 while (iterator.hasNext()) {
-                    System.out.println("scanning");
-                    this.server.key = (SelectionKey) iterator.next();
-                    iterator.remove();
-                    if (this.server.key.isAcceptable()) {
-                        keyAcceptable();
-                    }
-                    if (this.server.key.isReadable()) {
-                        keyReadable();
-                    }
+                    // gets next key
+                    key = (SelectionKey) iterator.next();
+
+                    // checks for incoming connections
+                    if (key.isAcceptable()) keyAcceptable();
+
+                    // checks for incoming data
+                    if (key.isReadable()) keyReadable();
                 }
             }
         } catch (ClosedChannelException e) {
@@ -62,23 +76,18 @@ public class socketServer implements Runnable {
         }
     }
 
-    public void start() {
-        System.out.println(serverThreadName + " Server");
-        if (serverThread == null) {
-            serverThread = new Thread (this, serverThreadName);
-            serverThread.start();
-        }
-    }
-
+    // <<< under construction >>>
+    // assigns keys to connected streams
     private void keyAcceptable() throws IOException {
-        SocketChannel sc = this.server.serverSocketChannel.accept();
+        SocketChannel sc = serverSocketChannel.accept();
         sc.configureBlocking(false);
-        sc.register(this.server.selector, SelectionKey.OP_READ);
+        sc.register(selector, SelectionKey.OP_READ);
         System.out.println("Connection Accepted: " + sc.getLocalAddress() + "\n");
     }
 
+    // reads incoming messages using unique keys
     private void keyReadable() throws IOException {
-        SocketChannel sc = (SocketChannel) this.server.key.channel();
+        SocketChannel sc = (SocketChannel) key.channel();
         ByteBuffer bb = ByteBuffer.allocate(1024);
         sc.read(bb);
         String result = new String(bb.array()).trim();
@@ -88,10 +97,6 @@ public class socketServer implements Runnable {
         if (result.length() <= 0) {
             sc.close();
             System.out.println("Connection closed...");
-            System.out.println(
-                    "Server will keep running. " +
-                            "Try running another client to " +
-                            "re-establish connection");
         }
     }
 }
