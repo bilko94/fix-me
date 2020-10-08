@@ -6,13 +6,14 @@ public class main {
     public static void main( String[] args )
     {
         try {
-            // init servers
-            socketServer brokerServer = new socketServer(5000,"Broker");
-            socketServer marketServer = new socketServer(5001,"Market");
+            // init routing table
+            routingTable routingTable = new routingTable();
 
-            // router shit happens here
-            brokerServer.readBuffer();
-            marketServer.readBuffer();
+            // init servers
+            socketServer brokerServer = new socketServer(5000,"Broker", routingTable);
+            socketServer marketServer = new socketServer(5001,"Market", routingTable);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
