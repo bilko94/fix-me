@@ -11,23 +11,17 @@ import java.util.List;
 public class socketServer implements Runnable {
 
     // server vars
-    private final ServerSocketChannel serverSocketChannel;
+    private final ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();;
     private final channel ConnectedChannel = new channel();
-    private final Selector selector;
-    private SelectionKey key;
+    private final Selector selector = Selector.open();
 
     public socketServer(int port, String serverThreadName) throws IOException {
-        // server config
-        serverSocketChannel = ServerSocketChannel.open();
+        // init non blocking buffer
         serverSocketChannel.configureBlocking(false);
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         // setup server listening port
         serverSocketChannel.bind(new InetSocketAddress(InetAddress.getByName("localhost"), port));
-
-        // init non blocking buffer
-        selector = Selector.open();
-        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-
 
         // starting thread
         Thread serverThread = new Thread(this, serverThreadName);
@@ -65,7 +59,7 @@ public class socketServer implements Runnable {
 
     // <<< under construction >>>
 
-    //TODO make times messages in connection client
+    //TODO make timed messages in connection client
     //TODO figure out how to manage users
     //TODO grind aim in CSGO
     //TODO make cheese sandwich

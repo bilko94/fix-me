@@ -1,15 +1,15 @@
 package Market;
 import Socket.connect;
 
+import java.util.concurrent.TimeUnit;
+
 public class main {
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) throws InterruptedException {
         System.out.println( "Hello World! market" );
-        connect connection = new connect("localHost",5000);
-        connection.send("scale1");
-        connection.send("scale2");
-        connection.send("scale3");
-        connection.send("scale4");
-        connection.close();
+        connect connection = new connect("localHost",5001);
+        while (true){
+            connection.send("scale");
+            TimeUnit.SECONDS.sleep(2);
+        }
     }
 }
