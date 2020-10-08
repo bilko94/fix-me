@@ -5,6 +5,9 @@ import java.io.IOException;
 public class main {
     public static void main( String[] args )
     {
+        System.out.println( "Hello World! router" );
+        System.out.println("testing mongo server");
+        MongoDBAtlasClient.connection();
         try {
             // init routing table
             routingTable routingTable = new routingTable();
