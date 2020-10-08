@@ -38,7 +38,8 @@ public class socketServer implements Runnable {
         try {
             while (true) {
                 // checks if any incoming keys
-                if (selector.select() <= 0) continue;
+                if (selector.select() <= 0)
+                    continue;
 
                 // iterates through keys
                 for (SelectionKey key : selector.selectedKeys()){
