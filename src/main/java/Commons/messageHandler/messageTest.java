@@ -1,4 +1,4 @@
-package fixDecoder;
+package Commons.messageHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 
-// message format:  <buy/sell> <instrument> <amount> <id> <checksum>
+// message format:  <buy/sell> <instrument> <amount> <id> <recipientID> <checksum>
+// example buy-item-5-6985-5544 , 293819
+//
+//
+//
 
 
 public class messageTest {
@@ -19,7 +23,7 @@ public class messageTest {
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         String brokerMsg;
 
-        System.out.println("Place your order: \nFormat: <buy/sell> <instrument> <amount>");
+        System.out.println("Place your order: \nFormat: <buy/sell> <instrument> <amount> <recipientID>");
         while (true){
             brokerMsg = stdIn.readLine();
             if (checkInput(brokerMsg)) {
@@ -50,7 +54,7 @@ public class messageTest {
         String[] msgArray = message.split(" ");
         if (msgArray.length == 3) {
             if ((msgArray[0].equalsIgnoreCase("buy") || msgArray[0].equalsIgnoreCase("sell"))
-                    && msgArray[1].length() > 0 && msgArray[2].length() > 0) {
+                    && msgArray[1].length() > 0 && msgArray[2].length() > 0 && msgArray[3].length() > 0) {
                 try {
                     Integer.parseInt(msgArray[2]);
                     return true;

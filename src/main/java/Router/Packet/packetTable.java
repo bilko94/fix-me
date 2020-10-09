@@ -1,5 +1,7 @@
 package Router.Packet;
 
+import Router.Packet.packet;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +10,6 @@ public class packetTable {
 
     public void addPacket(String message){
         packet newPacket = new packet(message);
-        // verifyPacket
-        // if not verified an error package will be built for sender and placed in verified packet
         packetBuffer.add(newPacket);
     }
 

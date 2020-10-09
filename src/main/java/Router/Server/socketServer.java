@@ -1,7 +1,6 @@
 package Router.Server;
 
 import Router.Packet.packetTable;
-import Router.Routing.client;
 import Router.Routing.routingTable;
 
 import java.io.IOException;

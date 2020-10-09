@@ -1,8 +1,4 @@
-package Router.Client;
-
-import Router.Packet.packetTable;
-import Router.Routing.routingTable;
-import jdk.dynalink.beans.StaticClass;
+package Router.ClientSocket;
 
 import java.io.*;
 import java.net.*;
@@ -10,7 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.*;
 
-public class socketClient implements Runnable {
+public class socketHandler implements Runnable {
 
     private final SocketChannel socketChannel = SocketChannel.open();
     private final Selector selector = Selector.open();
@@ -18,7 +14,7 @@ public class socketClient implements Runnable {
     List<String> receivedBuffer = new ArrayList<>();
     int port;
 
-    public socketClient(int port) throws IOException {
+    public socketHandler(int port) throws IOException {
         this.port = port;
 
         socketChannel.configureBlocking(false);
