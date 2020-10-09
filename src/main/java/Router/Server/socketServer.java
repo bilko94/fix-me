@@ -1,5 +1,7 @@
 package Router.Server;
 
+import Router.Packet.packetTable;
+import Router.Routing.client;
 import Router.Routing.routingTable;
 
 import java.io.IOException;
@@ -13,10 +15,11 @@ public class socketServer implements Runnable {
     // server vars
     private final ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
     private final Selector selector = Selector.open();
-    private Router.Routing.routingTable routingTable;
+    private routingTable routingTable;
+    private packetTable packetTable;
     private int port;
 
-    public socketServer(int port, String serverThreadName, routingTable routingTable) throws IOException {
+    public socketServer(int port, String serverThreadName, routingTable routingTable, packetTable packetTable) throws IOException {
         // init non blocking buffer
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -25,8 +28,9 @@ public class socketServer implements Runnable {
         this.port = port;
         serverSocketChannel.bind(new InetSocketAddress(InetAddress.getByName("localhost"), port));
 
-        // assigning routing table
+        // assigning routing table and packet table
         this.routingTable = routingTable;
+        this.packetTable = packetTable;
 
         // starting thread
         Thread serverThread = new Thread(this, serverThreadName);
@@ -53,6 +57,7 @@ public class socketServer implements Runnable {
                     // removes processed key
                     selector.selectedKeys().remove(key);
                 }
+                keyWritable();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -84,17 +89,29 @@ public class socketServer implements Runnable {
         try {
             sc.read(bb);
         } catch (IOException e) {
-            sc.close();
+            closeChannel(sc);
             return;
         }
 
         String result = new String(bb.array()).trim();
         if (result.length() <= 0) {
-            sc.close();
-            System.out.println("Connection closed...");
+            closeChannel(sc);
         } else {
-            // no
-
+            System.out.println(result);
+//            packetTable.addPacket(result);
         }
+    }
+
+    private void keyWritable() throws IOException {
+        String msg = "bruh server";
+        client clientObject = routingTable.getChannel();
+        SocketChannel sc = clientObject.channel;
+        ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
+        sc.write(bb);
+    }
+
+    private void closeChannel(SocketChannel sc) throws IOException {
+        routingTable.remove(sc);
+        sc.close();
     }
 }

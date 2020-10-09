@@ -1,6 +1,8 @@
 package Router;
 
+import Router.Packet.packetTable;
 import Router.Routing.routingTable;
+import Router.Server.socketSender;
 import Router.Server.socketServer;
 
 import java.io.IOException;
@@ -10,14 +12,14 @@ public class main {
     {
         System.out.println( "Hello World! router" );
         try {
-            // init routing table
+            // init tables
+            packetTable packetTable = new packetTable();
             routingTable routingTable = new routingTable();
 
             // init servers
-            socketServer brokerServer = new socketServer(5000,"Broker", routingTable);
-            socketServer marketServer = new socketServer(5001,"Market", routingTable);
-
-
+            socketServer brokerServer = new socketServer(5000,"BrokerServer", routingTable, packetTable);
+            socketServer marketServer = new socketServer(5001,"MarketServer", routingTable, packetTable);
+            socketSender socketSender = new socketSender(routingTable, packetTable);
         } catch (IOException e) {
             e.printStackTrace();
         }

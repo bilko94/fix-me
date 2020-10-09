@@ -10,7 +10,11 @@ public class routingTable {
     public void add(SocketChannel socketChannel, int port){
         connectedUsers.add(new client(1,socketChannel, port));
     }
-    public void remove(){}
-    public void getChannel(){}
+    public void remove(SocketChannel sc){}
+    public client getChannel(){
+        if ( connectedUsers.size() > 0)
+            return connectedUsers.get(0);
+        return null;
+    }
 
 }

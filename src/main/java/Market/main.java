@@ -1,6 +1,7 @@
 package Market;
-import Socket.connect;
 
+import Router.Client.socketClient;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class main {
@@ -8,10 +9,18 @@ public class main {
         System.out.println( "Hello World! market" );
         System.out.println("testing mongo server");
         MongoDBAtlasClient.connection();
-        connect connection = new connect("localHost",5001);
-        while (true){
-            connection.send("scale");
-            TimeUnit.SECONDS.sleep(2);
+        socketClient client = null;
+        try {
+            client = new socketClient(5000);
+            while (true){
+                client.sendMessage("hi");
+                System.out.println(client.getResponseMessage());
+                TimeUnit.MILLISECONDS.sleep(1000);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+
     }
 }
