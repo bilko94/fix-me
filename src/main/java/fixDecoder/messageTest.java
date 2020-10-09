@@ -1,9 +1,4 @@
-package Broker;
-
-
-// message format:  <buy/sell> <instrument> <amount> <id> <checksum>
-
-import Socket.connect;
+package fixDecoder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,15 +6,15 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 
-public class broker {
+// message format:  <buy/sell> <instrument> <amount> <id> <checksum>
 
-    private static String id;
 
-    public static void main(String[] args) throws IOException {
+public class messageTest {
+
+    public void checkSumTest() throws IOException {
         // socket connect kuk here
 
         // id = id return here
-        connect connection = new connect("localHost",5000);
         PrintWriter output = new PrintWriter(System.out, true);
         BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
         String brokerMsg;
@@ -47,6 +42,7 @@ public class broker {
             checksum += ((1 << temp) - 1) ^ parsedMsg.charAt(i);
         }
         parsedMsg += "-"+checksum;
+        System.out.println("message sent: "+parsedMsg);
         return parsedMsg;
     }
 
