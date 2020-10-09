@@ -1,14 +1,20 @@
 package Broker;
 
+
+// message format:  <buy/sell> <instrument> <amount> <id> <checksum>
+
 import Socket.connect;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.concurrent.TimeUnit;
 
-public class main {
+
+public class broker {
+
+    private static String id;
+
     public static void main(String[] args) throws IOException {
         // socket connect kuk here
 
@@ -41,7 +47,6 @@ public class main {
             checksum += ((1 << temp) - 1) ^ parsedMsg.charAt(i);
         }
         parsedMsg += "-"+checksum;
-        System.out.println("message sent: "+parsedMsg);
         return parsedMsg;
     }
 

@@ -7,7 +7,7 @@ public class main {
     public static void main( String[] args ) throws InterruptedException {
         System.out.println( "Hello World! market" );
         System.out.println("testing mongo server");
-        MongoDBAtlasClient.connection();
+//        MongoDBAtlasClient.connection();
         connect connection = new connect("localHost",5001);
         while (true){
             connection.send("scale");
