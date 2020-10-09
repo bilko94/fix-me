@@ -37,6 +37,4 @@
             </plugins>
         </pluginManagement>
     </build>
-    <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
-
 </project>
