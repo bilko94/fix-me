@@ -4,29 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class packetTable {
-    List<packet> verifiedPacketBuffer = new ArrayList<>();
+    List<packet> packetBuffer = new ArrayList<>();
 
     public void addPacket(String message){
         packet newPacket = new packet(message);
         // verifyPacket
         // if not verified an error package will be built for sender and placed in verified packet
-        verifiedPacketBuffer.add(newPacket);
+        packetBuffer.add(newPacket);
     }
 
     public List<packet> getPackets(){
-        List<packet> scheduledPackets = new ArrayList<>(verifiedPacketBuffer);
-        verifiedPacketBuffer = new ArrayList<>();
+        List<packet> scheduledPackets = new ArrayList<>(packetBuffer);
+        packetBuffer = new ArrayList<>();
         return scheduledPackets;
     }
 
-//    public List<packet> getVerifiedPackets(int destinationPort){
-//        List<packet> gatheredPackets = new ArrayList<>();
-//        for (packet verifiedPacket : verifiedPacketBuffer){
-//            if (verifiedPacket.recipient == destinationPort){
-//                gatheredPackets.add(verifiedPacket);
-//                verifiedPacketBuffer.remove(verifiedPacket);
-//            }
-//        }
-//        return gatheredPackets;
-//    }
+    public boolean packetsAvailable(){
+        if (packetBuffer.size() > 0)
+            return true;
+        return false;
+    }
+
 }

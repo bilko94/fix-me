@@ -1,9 +1,9 @@
 package Router.Packet;
 
 public class packet {
-    int sender;
-    int recipient;
-    int valid;
+    public int sender;
+    public int recipient;
+    public boolean valid;
     public String message;
 
     public packet(String message) {
@@ -13,8 +13,8 @@ public class packet {
 
     void messageParser(){
         // check up
-        sender = 1000;
+        sender = 1001;
         recipient = 1000;
-        valid = 1;
+        valid = true;
     }
 }

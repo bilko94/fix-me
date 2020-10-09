@@ -8,13 +8,29 @@ public class routingTable {
     List<client> connectedUsers = new ArrayList<>();
 
     public void add(SocketChannel socketChannel, int port){
-        connectedUsers.add(new client(1,socketChannel, port));
+        connectedUsers.add(new client(getId(),socketChannel, port));
     }
-    public void remove(SocketChannel sc){}
-    public client getChannel(){
-        if ( connectedUsers.size() > 0)
-            return connectedUsers.get(0);
+
+    public int getId(){
+        return 1000 + connectedUsers.size();
+    }
+
+    public void remove(SocketChannel sc){
+
+    }
+
+    public client getChannel(int clientiId){
+        for (client connectedClient : connectedUsers){
+            if (connectedClient.id == clientiId)
+                return connectedClient;
+        }
         return null;
+    }
+
+    public void printClients(){
+        for (client users: connectedUsers){
+            System.out.println(users.id);
+        }
     }
 
 }

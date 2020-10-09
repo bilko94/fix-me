@@ -57,7 +57,6 @@ public class socketServer implements Runnable {
                     // removes processed key
                     selector.selectedKeys().remove(key);
                 }
-                keyWritable();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,6 +78,7 @@ public class socketServer implements Runnable {
         sc.configureBlocking(false);
         sc.register(selector, key.OP_READ);
         routingTable.add(sc, port);
+        routingTable.printClients();
     }
 
     // reads incoming messages using unique keys
@@ -97,17 +97,8 @@ public class socketServer implements Runnable {
         if (result.length() <= 0) {
             closeChannel(sc);
         } else {
-            System.out.println(result);
-//            packetTable.addPacket(result);
+            packetTable.addPacket(result);
         }
-    }
-
-    private void keyWritable() throws IOException {
-        String msg = "bruh server";
-        client clientObject = routingTable.getChannel();
-        SocketChannel sc = clientObject.channel;
-        ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
-        sc.write(bb);
     }
 
     private void closeChannel(SocketChannel sc) throws IOException {
