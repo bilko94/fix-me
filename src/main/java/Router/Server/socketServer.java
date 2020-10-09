@@ -1,4 +1,4 @@
-package Router;
+package Router.Server;
 
 import Router.Routing.routingTable;
 
