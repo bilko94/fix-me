@@ -1,5 +1,7 @@
 package Router;
 
+import Router.Routing.routingTable;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -11,7 +13,8 @@ public class socketServer implements Runnable {
     // server vars
     private final ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
     private final Selector selector = Selector.open();
-    private routingTable routingTable;
+    private Router.Routing.routingTable routingTable;
+    private int port;
 
     public socketServer(int port, String serverThreadName, routingTable routingTable) throws IOException {
         // init non blocking buffer
@@ -19,6 +22,7 @@ public class socketServer implements Runnable {
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
         // setup server listening port
+        this.port = port;
         serverSocketChannel.bind(new InetSocketAddress(InetAddress.getByName("localhost"), port));
 
         // assigning routing table
@@ -69,7 +73,7 @@ public class socketServer implements Runnable {
         SocketChannel sc = serverSocketChannel.accept();
         sc.configureBlocking(false);
         sc.register(selector, key.OP_READ);
-        routingTable.add(sc);
+        routingTable.add(sc, port);
     }
 
     // reads incoming messages using unique keys
@@ -89,6 +93,8 @@ public class socketServer implements Runnable {
             sc.close();
             System.out.println("Connection closed...");
         } else {
+            // no
+
         }
     }
 }
