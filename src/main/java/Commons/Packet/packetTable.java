@@ -1,6 +1,4 @@
-package Router.Packet;
-
-import Router.Packet.packet;
+package Commons.Packet;
 
 import java.util.ArrayList;
 import java.util.List;

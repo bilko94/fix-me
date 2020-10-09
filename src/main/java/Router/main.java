@@ -1,6 +1,6 @@
 package Router;
 
-import Router.Packet.packetTable;
+import Commons.Packet.packetTable;
 import Router.Routing.routingTable;
 import Router.Server.socketSender;
 import Router.Server.socketServer;

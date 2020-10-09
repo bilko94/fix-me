@@ -1,7 +1,7 @@
 package Router.Server;
 
-import Router.Packet.packet;
-import Router.Packet.packetTable;
+import Commons.Packet.packet;
+import Commons.Packet.packetTable;
 import Router.Routing.client;
 import Router.Routing.routingTable;
 

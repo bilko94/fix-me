@@ -8,10 +8,21 @@ import java.io.PrintWriter;
 
 // message format:  <buy/sell> <instrument> <amount> <id> <recipientID> <checksum>
 // example buy-item-5-6985-5544 , 293819
+//TODO discuss message format:
+// problems:
+//  validation(separate message from sender id ,
+//  recipientId and checksum) ,
+//  different types messages ,
+//  where to put message parser.
+//  A soluion(ithink) :
+//  "message(can be any type of message);clientID;recipientID;checkSum(checksum must includeIds when created)"
+//  message will be placed into a packet class , packet(String message, int sender, int recipient)
+//  packet will have a methods:
+//      packet(String receivedMessage) <- this will parse the coming message and validate using the checksum
+//      packet(String newMessage, int sender, int recipient) <- this will make a new packet and generate a checksum
+//      String preparePacket() <- this will generate a checksum and prepare the message for sending
+//      boolean isValid() <- this will check if the message is valid using the checksum
 //
-//
-//
-
 
 public class messageTest {
 
