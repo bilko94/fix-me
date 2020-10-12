@@ -1,5 +1,7 @@
 package Commons.ClientSocket;
 
+import Commons.Packet.packet;
+
 import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
@@ -10,8 +12,8 @@ public class socketHandler implements Runnable {
 
     private final SocketChannel socketChannel = SocketChannel.open();
     private final Selector selector = Selector.open();
-    List<String> transmissionBuffer = new ArrayList<>();
-    List<String> receivedBuffer = new ArrayList<>();
+    List<packet> transmissionBuffer = new ArrayList<>();
+    List<packet> receivedBuffer = new ArrayList<>();
     int port;
 
     public socketHandler(int port) throws IOException {
@@ -28,14 +30,12 @@ public class socketHandler implements Runnable {
         clientThread.start();
     }
 
-    public void sendMessage(String message){
-        transmissionBuffer.add(message);
-    }
+    public void sendMessage(packet Packet){ transmissionBuffer.add(Packet); }
 
     public String getResponseMessage(){
         if (receivedBuffer.size() == 0)
             return "";
-        String response = receivedBuffer.get(0);
+        String response = receivedBuffer.get(0).message;
         receivedBuffer.remove(receivedBuffer.get(0));
         return response;
     }
@@ -43,7 +43,7 @@ public class socketHandler implements Runnable {
     private String getTransmissionMessage(){
         if (transmissionBuffer.size() == 0)
             return "";
-        String message = transmissionBuffer.get(0);
+        String message = transmissionBuffer.get(0).packetToString();
         transmissionBuffer.remove(transmissionBuffer.get(0));
         return message;
     }
@@ -93,7 +93,7 @@ public class socketHandler implements Runnable {
         ByteBuffer bb = ByteBuffer.allocate(1024);
         sc.read(bb);
         String result = new String(bb.array()).trim();
-        receivedBuffer.add(result);
+        receivedBuffer.add(new packet(result));
     }
 
     private void keyWritable(SelectionKey key) throws IOException {

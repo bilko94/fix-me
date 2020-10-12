@@ -38,17 +38,18 @@ public class socketSender implements Runnable{
             List<packet> grabbedPackets = packetTable.getPackets();
             for (packet scheduledPacket: grabbedPackets){
                 System.out.println("found packet");
-                if (scheduledPacket.valid){
+                if (scheduledPacket.isValid()){
                     System.out.println("packet Valid");
                     client sender = routingTable.getChannel(scheduledPacket.sender);
                     client recipient = routingTable.getChannel(scheduledPacket.recipient);
                     try {
                         if (recipient != null) {
                             System.out.println("found Recipient");
-                            writeToSocketChannel(recipient.channel, scheduledPacket.message);
+                            writeToSocketChannel(recipient.channel, scheduledPacket.packetToString());
                         } else {
                             System.out.println("cannot find recipient");
-                            writeToSocketChannel(sender.channel, "cannot find route " + scheduledPacket.recipient);
+                            writeToSocketChannel(sender.channel, new packet("cannot find route " + scheduledPacket.recipient, 1, scheduledPacket.sender).packetToString());
+                            System.out.println("cannot find recipient");
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -65,6 +66,17 @@ public class socketSender implements Runnable{
 
     private void writeToSocketChannel(SocketChannel channel, String message) throws IOException {
         ByteBuffer bb = ByteBuffer.wrap(message.getBytes());
-        channel.write(bb);
+
+        try {
+            channel.write(bb);
+        } catch (IOException e) {
+            closeChannel(channel);
+            return;
+        }
+    }
+
+    private void closeChannel(SocketChannel sc) throws IOException {
+        routingTable.remove(sc);
+        sc.close();
     }
 }
