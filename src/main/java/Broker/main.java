@@ -10,10 +10,9 @@ import java.util.concurrent.TimeUnit;
 public class main {
     public static void main(String[] args) throws IOException, InterruptedException {
         socketHandler connection = new socketHandler(5000);
-        packet message = new packet("hi",1000,1001);
         String msg = "";
         while (true){
-            connection.sendMessage(message);
+            connection.sendMessage("hi", 100000);
             msg = connection.getResponseMessage();
             if (!msg.equals(""))
                 System.out.println(msg);

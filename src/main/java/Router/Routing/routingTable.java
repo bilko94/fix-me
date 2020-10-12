@@ -12,11 +12,31 @@ public class routingTable {
     }
 
     public int getId(){
-        return 1000 + connectedUsers.size();
+        int newId = 100000;
+        while (newId < 1000000){
+            if (idAvailable(newId))
+                return newId;
+            newId++;
+        }
+        return -1;
+    }
+
+    public boolean idAvailable(int id){
+        for (client connectedClient : connectedUsers){
+            if (connectedClient.id == id){
+                return false;
+            }
+        }
+        return true;
     }
 
     public void remove(SocketChannel sc){
-
+        for (client connectedClient : connectedUsers){
+            if (connectedClient.channel.equals(sc)){
+                connectedUsers.remove(connectedClient);
+                return;
+            }
+        }
     }
 
     public client getChannel(int clientiId){
@@ -25,6 +45,15 @@ public class routingTable {
                 return connectedClient;
         }
         return null;
+    }
+
+    public int getIdViaChannel(SocketChannel sc){
+        for (client connectedClient : connectedUsers){
+            if (connectedClient.channel.equals(sc)){
+                return connectedClient.id;
+            }
+        }
+        return (1);
     }
 
     public void printClients(){
