@@ -47,13 +47,13 @@ public class routingTable {
         return null;
     }
 
-    public int getIdViaChannel(SocketChannel sc){
-        for (client connectedClient : connectedUsers){
-            if (connectedClient.channel.equals(sc)){
-                return connectedClient.id;
-            }
+    public List<client> getNonVerifiedClients(){
+        List<client> noIDClients = new ArrayList<>();
+        for (client user : connectedUsers){
+            if (user.verified == false)
+                noIDClients.add(user);
         }
-        return (1);
+        return noIDClients;
     }
 
     public void printClients(){

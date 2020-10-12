@@ -26,19 +26,23 @@ public class packet {
         this.message = message;
         this.sender = sender;
         this.recipient = recipient;
-        genCheckSum();
+        this.checkSum = genCheckSum();
     }
 
-    public void genCheckSum(){
-        checkSum = 1;
+    public int genCheckSum(){
+        int genCheckSum = 1;
         for (int i = 0; i < message.length(); i++){
             int temp = (int) (Math.floor(Math.log(message.charAt(i)) / Math.log(2))) + 1;
-            checkSum += ((1 << temp) - 1) ^ message.charAt(i);
+            genCheckSum += ((1 << temp) - 1) ^ message.charAt(i);
         }
+        return genCheckSum;
     }
 
     public boolean isValid(){
-        return true;
+        if (genCheckSum() == this.checkSum){
+            return true;
+        }
+        return false;
     }
 
     public String packetToString(){

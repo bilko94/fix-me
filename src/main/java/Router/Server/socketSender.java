@@ -20,6 +20,7 @@ public class socketSender implements Runnable{
     public socketSender(routingTable routingTable, packetTable packetTable) {
         this.routingTable = routingTable;
         this.packetTable = packetTable;
+
         Thread senderThread = new Thread(this, "socketSender");
         senderThread.start();
     }
@@ -27,37 +28,10 @@ public class socketSender implements Runnable{
     @Override
     public void run() {
         while (true){
-            if (!packetTable.packetsAvailable()){
-                try {
-                    TimeUnit.MILLISECONDS.sleep(10);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                continue;
-            }
-
-            List<packet> grabbedPackets = packetTable.getPackets();
-            for (packet scheduledPacket: grabbedPackets){
-                if (scheduledPacket.isValid()){
-                    client sender = routingTable.getChannel(scheduledPacket.sender);
-                    client recipient = routingTable.getChannel(scheduledPacket.recipient);
-                    try {
-                        if (recipient != null) {
-//                            System.out.println("Sending to :" + scheduledPacket.recipient);
-                            writeToSocketChannel(recipient.channel, scheduledPacket.packetToString());
-                        } else if (sender == null && recipient == null  ) {
-                            System.out.println("packet lost msg + " + scheduledPacket.message + " " + scheduledPacket.sender + " > " + scheduledPacket.recipient);
-                        }else {
-//                            System.out.println("Cannot Send to :" + scheduledPacket.recipient);
-                            writeToSocketChannel(sender.channel, new packet("cannot find route " + scheduledPacket.recipient, 1, scheduledPacket.sender).packetToString());
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            validateUsers();
+            sendPackets();
             try {
-                TimeUnit.MILLISECONDS.sleep(1000);
+                TimeUnit.MILLISECONDS.sleep(100);
             } catch (InterruptedException e) {
                 System.out.println("error");
                 e.printStackTrace();
@@ -65,18 +39,62 @@ public class socketSender implements Runnable{
         }
     }
 
-    private void writeToSocketChannel(SocketChannel channel, String message) throws IOException {
+    private void validateUsers(){
+        List<client> nonVerifiedClients = routingTable.getNonVerifiedClients();
+        packet connectionMessage;
+
+        for (client nonVerifiedClient : nonVerifiedClients){
+            connectionMessage = new packet("connected",1,nonVerifiedClient.id);
+            nonVerifiedClient.verified = true;
+            writeToSocketChannel(nonVerifiedClient.channel, connectionMessage.packetToString());
+        }
+    }
+
+    private void sendPackets(){
+        if (!packetTable.packetsAvailable())
+            return;
+
+        List<packet> packets = packetTable.getPackets();
+        client sender;
+        client recipient;
+
+        for (packet scheduledPacket: packets){
+            sender      = routingTable.getChannel(scheduledPacket.sender);
+            recipient   = routingTable.getChannel(scheduledPacket.recipient);
+
+            if (!scheduledPacket.isValid())
+                writeToSocketChannel(sender.channel, new packet("invalid checksum",1,sender.id).packetToString());
+
+            else if (recipient == null)
+                writeToSocketChannel(sender.channel, new packet("packet loss : '" + scheduledPacket.packetToString() + "'" ,1,sender.id).packetToString());
+
+            else if (recipient.verified == false)
+                writeToSocketChannel(sender.channel, new packet("packet loss : '" + scheduledPacket.packetToString() +"'" ,1,sender.id).packetToString());
+
+            else
+                writeToSocketChannel(recipient.channel, scheduledPacket.packetToString());
+        }
+    }
+
+    private void writeToSocketChannel(SocketChannel channel, String message) {
         ByteBuffer bb = ByteBuffer.wrap(message.getBytes());
         try {
             channel.write(bb);
         } catch (ClosedChannelException e) {
             closeChannel(channel);
-            return;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private void closeChannel(SocketChannel sc) throws IOException {
-        routingTable.remove(sc);
-        sc.close();
+    private void closeChannel(SocketChannel channel){
+        try {
+            routingTable.remove(channel);
+            channel.close();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        return;
     }
+
 }
