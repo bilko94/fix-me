@@ -113,6 +113,7 @@ public class socketHandler implements Runnable {
         ByteBuffer bb = ByteBuffer.allocate(1024);
         sc.read(bb);
         String result = new String(bb.array()).trim();
+        System.out.println(result);
         receivedBuffer.add(new packet(result));
     }
 

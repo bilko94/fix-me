@@ -63,13 +63,13 @@ public class socketSender implements Runnable{
             recipient   = routingTable.getChannel(scheduledPacket.recipient);
 
             if (!scheduledPacket.isValid())
-                writeToSocketChannel(sender.channel, new packet("invalid checksum",1,sender.id).packetToString());
+                writeToSocketChannel(sender.channel, new packet("invalid checksum (" + scheduledPacket.packetToString().replace(";","_") + ")",1,sender.id).packetToString());
 
             else if (recipient == null)
-                writeToSocketChannel(sender.channel, new packet("packet loss : '" + scheduledPacket.packetToString() + "'" ,1,sender.id).packetToString());
+                writeToSocketChannel(sender.channel, new packet("packet loss : (" + scheduledPacket.packetToString().replace(";","_") + ")" ,1,sender.id).packetToString());
 
             else if (recipient.verified == false)
-                writeToSocketChannel(sender.channel, new packet("packet loss : '" + scheduledPacket.packetToString() +"'" ,1,sender.id).packetToString());
+                writeToSocketChannel(sender.channel, new packet("packet loss : (" + scheduledPacket.packetToString().replace(";","_") +")" ,1,sender.id).packetToString());
 
             else
                 writeToSocketChannel(recipient.channel, scheduledPacket.packetToString());
