@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class main {
     public static void main( String[] args ) throws InterruptedException, IOException {
-        socketHandler connection = new socketHandler(5000);
+        socketHandler connection = new socketHandler(5001);
         String msg = "";
         while (true){
             msg = connection.getResponseMessage();
