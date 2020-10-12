@@ -26,7 +26,7 @@ import java.io.PrintWriter;
 
 public class messageTest {
 
-    public void checkSumTest() throws IOException {
+    public void broker() throws IOException {
         // socket connect kuk here
 
         // id = id return here
@@ -38,7 +38,7 @@ public class messageTest {
         while (true){
             brokerMsg = stdIn.readLine();
             if (checkInput(brokerMsg)) {
-                output.println(sendMessage(brokerMsg));
+
                 //TODO add a message return from router here (requires sockets completed)
             } else {
                 System.out.println("Incorrect format for your order please try again");
@@ -46,20 +46,20 @@ public class messageTest {
         }
 
     }
-
-    private static String sendMessage(String message) {
-        //String parsedMsg = id;
-        String parsedMsg = "";
-        int checksum = 1;
-        parsedMsg += "-"+message.replaceAll(" ", "-");
-        for (int i = 0; i < parsedMsg.length(); i++){
-            int temp = (int) (Math.floor(Math.log(parsedMsg.charAt(i)) / Math.log(2))) + 1;
-            checksum += ((1 << temp) - 1) ^ parsedMsg.charAt(i);
-        }
-        parsedMsg += "-"+checksum;
-        System.out.println("message sent: "+parsedMsg);
-        return parsedMsg;
-    }
+//
+//    private static String sendMessage(String message) {
+//        //String parsedMsg = id;
+//        String parsedMsg = "";
+//        int checksum = 1;
+//        parsedMsg += "-"+message.replaceAll(" ", "-");
+//        for (int i = 0; i < parsedMsg.length(); i++){
+//            int temp = (int) (Math.floor(Math.log(parsedMsg.charAt(i)) / Math.log(2))) + 1;
+//            checksum += ((1 << temp) - 1) ^ parsedMsg.charAt(i);
+//        }
+//        parsedMsg += "-"+checksum;
+//        System.out.println("message sent: "+parsedMsg);
+//        return parsedMsg;
+//    }
 
     private static boolean checkInput(String message) {
         String[] msgArray = message.split(" ");

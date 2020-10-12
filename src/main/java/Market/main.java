@@ -8,13 +8,16 @@ import java.util.concurrent.TimeUnit;
 
 public class main {
     public static void main( String[] args ) throws InterruptedException, IOException {
-        socketHandler connection = new socketHandler(5001);
-        String msg = "";
-        while (true){
-            msg = connection.getResponseMessage();
-            if (!msg.equals(""))
-                System.out.println(msg);
-            TimeUnit.MILLISECONDS.sleep(1000);
-        }
+        market stockMarket = new market();
+        stockMarket.printMarket();
+
+//        socketHandler connection = new socketHandler(5000);
+//        String msg = "";
+//        while (true){
+//            msg = connection.getResponseMessage();
+//            if (!msg.equals(""))
+//                System.out.println(msg);
+//            TimeUnit.MILLISECONDS.sleep(1000);
+//        }
     }
 }
