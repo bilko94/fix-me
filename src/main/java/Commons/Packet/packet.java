@@ -3,16 +3,38 @@ package Commons.Packet;
 public class packet {
     public int sender;
     public int recipient;
+    public int checkSum;
     public String message;
 
     public packet(String message) {
-        this.message = message;
+        String[] msgArray;
+
+        msgArray = message.split(";");
+        if (msgArray.length >= 4){
+            this.message = msgArray[0];
+            this.sender = Integer.parseInt(msgArray[1]);
+            this.recipient = Integer.parseInt(msgArray[2]);
+            this.checkSum = Integer.parseInt(msgArray[3]);
+        }
+        else {
+            System.out.println("There was an error with the incoming msg.");
+        }
+
     }
 
     public packet(String message, int sender, int recipient){
         this.message = message;
         this.sender = sender;
         this.recipient = recipient;
+        genCheckSum();
+    }
+
+    public void genCheckSum(){
+        checkSum = 1;
+        for (int i = 0; i < message.length(); i++){
+            int temp = (int) (Math.floor(Math.log(message.charAt(i)) / Math.log(2))) + 1;
+            checkSum += ((1 << temp) - 1) ^ message.charAt(i);
+        }
     }
 
     public boolean isValid(){
@@ -20,7 +42,11 @@ public class packet {
     }
 
     public String packetToString(){
-        return "";
+        String parsedMsg;
+
+        parsedMsg = message+";"+sender+";"+recipient+";"+checkSum;
+
+        return parsedMsg;
     }
 
 }
