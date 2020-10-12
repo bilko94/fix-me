@@ -7,6 +7,7 @@ import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class socketHandler implements Runnable {
 
@@ -14,9 +15,10 @@ public class socketHandler implements Runnable {
     private final Selector selector = Selector.open();
     List<packet> transmissionBuffer = new ArrayList<>();
     List<packet> receivedBuffer = new ArrayList<>();
+    public int id;
     int port;
 
-    public socketHandler(int port) throws IOException {
+    public socketHandler(int port) throws IOException, InterruptedException {
         this.port = port;
 
         socketChannel.configureBlocking(false);
@@ -28,9 +30,27 @@ public class socketHandler implements Runnable {
 
         Thread clientThread = new Thread(this, "clientSocket");
         clientThread.start();
+        awaitId();
     }
 
-    public void sendMessage(packet Packet){ transmissionBuffer.add(Packet); }
+    public void awaitId() throws InterruptedException {
+        while (true){
+            if (receivedBuffer.size() > 0){
+                if (receivedBuffer.get(0).sender == 1){
+                    System.out.println("assigned id == " + receivedBuffer.get(0).recipient);
+                    id = receivedBuffer.get(0).recipient;
+                    receivedBuffer.clear();
+                    return;
+                }
+            }
+            TimeUnit.MILLISECONDS.sleep(100);
+        }
+    }
+
+    public void sendMessage(String message, int recipient){
+        packet newPacket = new packet(message, id, recipient);
+        transmissionBuffer.add(newPacket);
+    }
 
     public String getResponseMessage(){
         if (receivedBuffer.size() == 0)

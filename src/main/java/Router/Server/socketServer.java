@@ -1,5 +1,6 @@
 package Router.Server;
 
+import Commons.Packet.packet;
 import Commons.Packet.packetTable;
 import Router.Routing.routingTable;
 
@@ -77,6 +78,7 @@ public class socketServer implements Runnable {
         sc.configureBlocking(false);
         sc.register(selector, key.OP_READ);
         routingTable.add(sc, port);
+        packetTable.addPacket(new packet("connection success",1, routingTable.getIdViaChannel(sc)).packetToString());
         routingTable.printClients();
     }
 

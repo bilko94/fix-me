@@ -43,10 +43,12 @@ public class socketSender implements Runnable{
                     client recipient = routingTable.getChannel(scheduledPacket.recipient);
                     try {
                         if (recipient != null) {
-                            System.out.println("Sending to :" + scheduledPacket.recipient);
+//                            System.out.println("Sending to :" + scheduledPacket.recipient);
                             writeToSocketChannel(recipient.channel, scheduledPacket.packetToString());
-                        } else {
-                            System.out.println("Cannot Send to :" + scheduledPacket.recipient);
+                        } else if (sender == null && recipient == null  ) {
+                            System.out.println("packet lost msg + " + scheduledPacket.message + " " + scheduledPacket.sender + " > " + scheduledPacket.recipient);
+                        }else {
+//                            System.out.println("Cannot Send to :" + scheduledPacket.recipient);
                             writeToSocketChannel(sender.channel, new packet("cannot find route " + scheduledPacket.recipient, 1, scheduledPacket.sender).packetToString());
                         }
                     } catch (IOException e) {
@@ -70,9 +72,6 @@ public class socketSender implements Runnable{
         } catch (ClosedChannelException e) {
             closeChannel(channel);
             return;
-        } catch (IOException e) {
-            closeChannel(channel);
-            e.printStackTrace();
         }
     }
 
