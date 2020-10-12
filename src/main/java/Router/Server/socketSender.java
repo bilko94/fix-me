@@ -7,6 +7,7 @@ import Router.Routing.routingTable;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -37,19 +38,16 @@ public class socketSender implements Runnable{
 
             List<packet> grabbedPackets = packetTable.getPackets();
             for (packet scheduledPacket: grabbedPackets){
-                System.out.println("found packet");
                 if (scheduledPacket.isValid()){
-                    System.out.println("packet Valid");
                     client sender = routingTable.getChannel(scheduledPacket.sender);
                     client recipient = routingTable.getChannel(scheduledPacket.recipient);
                     try {
                         if (recipient != null) {
-                            System.out.println("found Recipient");
+                            System.out.println("Sending to :" + scheduledPacket.recipient);
                             writeToSocketChannel(recipient.channel, scheduledPacket.packetToString());
                         } else {
-                            System.out.println("cannot find recipient");
+                            System.out.println("Cannot Send to :" + scheduledPacket.recipient);
                             writeToSocketChannel(sender.channel, new packet("cannot find route " + scheduledPacket.recipient, 1, scheduledPacket.sender).packetToString());
-                            System.out.println("cannot find recipient");
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -59,6 +57,7 @@ public class socketSender implements Runnable{
             try {
                 TimeUnit.MILLISECONDS.sleep(1000);
             } catch (InterruptedException e) {
+                System.out.println("error");
                 e.printStackTrace();
             }
         }
@@ -66,12 +65,14 @@ public class socketSender implements Runnable{
 
     private void writeToSocketChannel(SocketChannel channel, String message) throws IOException {
         ByteBuffer bb = ByteBuffer.wrap(message.getBytes());
-
         try {
             channel.write(bb);
-        } catch (IOException e) {
+        } catch (ClosedChannelException e) {
             closeChannel(channel);
             return;
+        } catch (IOException e) {
+            closeChannel(channel);
+            e.printStackTrace();
         }
     }
 
