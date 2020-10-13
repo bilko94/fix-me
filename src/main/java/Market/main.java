@@ -1,6 +1,6 @@
 package Market;
 
-import Commons.ClientSocket.socketHandler;
+import Commons.ClientSocketService.socketService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class main {
             random--;
         }
         System.out.println(marketArray.size());
-        socketHandler connection = new socketHandler(5000);
+        socketService connection = new socketService(5000);
         String msg = "";
         while (true){
             msg = connection.getResponseMessage();

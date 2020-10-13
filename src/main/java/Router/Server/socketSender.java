@@ -2,7 +2,7 @@ package Router.Server;
 
 import Commons.Packet.packet;
 import Commons.Packet.packetTable;
-import Router.Routing.client;
+import Router.Routing.clientObject;
 import Router.Routing.routingTable;
 
 import java.io.IOException;
@@ -40,14 +40,14 @@ public class socketSender implements Runnable{
     }
 
     private void validateUsers(){
-        List<client> nonVerifiedClients = routingTable.getNonVerifiedClients();
+        List<clientObject> nonVerifiedClientObjects = routingTable.getNonVerifiedClients();
         packet connectionMessage;
 
-        for (client nonVerifiedClient : nonVerifiedClients){
-            connectionMessage = new packet("connected",1,nonVerifiedClient.id);
-            nonVerifiedClient.verified = true;
-            if (writeToSocketChannel(nonVerifiedClient.channel, connectionMessage.packetToString()) == true)
-                System.out.println(nonVerifiedClient.id + " connection verified");
+        for (clientObject nonVerifiedClientObject : nonVerifiedClientObjects){
+            connectionMessage = new packet("connected",1, nonVerifiedClientObject.id);
+            nonVerifiedClientObject.verified = true;
+            if (writeToSocketChannel(nonVerifiedClientObject.channel, connectionMessage.packetToString()) == true)
+                System.out.println(nonVerifiedClientObject.id + " connection verified");
         }
     }
 
@@ -56,8 +56,8 @@ public class socketSender implements Runnable{
             return;
 
         List<packet> packets = packetTable.getPackets();
-        client sender;
-        client recipient;
+        clientObject sender;
+        clientObject recipient;
 
         for (packet scheduledPacket: packets){
             sender      = routingTable.getChannel(scheduledPacket.sender);
