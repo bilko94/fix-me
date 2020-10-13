@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class routingTable {
-    List<client> connectedUsers = new ArrayList<>();
+    List<clientObject> connectedUsers = new ArrayList<>();
 
     public void add(SocketChannel socketChannel, int port){
-        client newClient = new client(getId(),socketChannel, port);
-        connectedUsers.add(newClient);
-        System.out.println(newClient.id + " connected (notVerified)");
+        clientObject newClientObject = new clientObject(getId(),socketChannel, port);
+        connectedUsers.add(newClientObject);
+        System.out.println(newClientObject.id + " connected (notVerified)");
     }
 
     public int getId(){
@@ -24,8 +24,8 @@ public class routingTable {
     }
 
     public boolean idAvailable(int id){
-        for (client connectedClient : connectedUsers){
-            if (connectedClient.id == id){
+        for (clientObject connectedClientObject : connectedUsers){
+            if (connectedClientObject.id == id){
                 return false;
             }
         }
@@ -33,34 +33,34 @@ public class routingTable {
     }
 
     public void remove(SocketChannel sc){
-        for (client connectedClient : connectedUsers){
-            if (connectedClient.channel.equals(sc)){
-                System.out.println(connectedClient.id + " disconnected");
-                connectedUsers.remove(connectedClient);
+        for (clientObject connectedClientObject : connectedUsers){
+            if (connectedClientObject.channel.equals(sc)){
+                System.out.println(connectedClientObject.id + " disconnected");
+                connectedUsers.remove(connectedClientObject);
                 return;
             }
         }
     }
 
-    public client getChannel(int clientiId){
-        for (client connectedClient : connectedUsers){
-            if (connectedClient.id == clientiId)
-                return connectedClient;
+    public clientObject getChannel(int clientiId){
+        for (clientObject connectedClientObject : connectedUsers){
+            if (connectedClientObject.id == clientiId)
+                return connectedClientObject;
         }
         return null;
     }
 
-    public List<client> getNonVerifiedClients(){
-        List<client> noIDClients = new ArrayList<>();
-        for (client user : connectedUsers){
+    public List<clientObject> getNonVerifiedClients(){
+        List<clientObject> noIDClientObjects = new ArrayList<>();
+        for (clientObject user : connectedUsers){
             if (user.verified == false)
-                noIDClients.add(user);
+                noIDClientObjects.add(user);
         }
-        return noIDClients;
+        return noIDClientObjects;
     }
 
     public void printClients(){
-        for (client users: connectedUsers){
+        for (clientObject users: connectedUsers){
             System.out.println(users.id);
         }
     }

@@ -1,4 +1,4 @@
-package Commons.ClientSocket;
+package Commons.ClientSocketService;
 
 import Commons.Packet.packet;
 
@@ -9,7 +9,7 @@ import java.nio.channels.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class socketHandler implements Runnable {
+public class socketService implements Runnable {
 
     private final SocketChannel socketChannel = SocketChannel.open();
     private final Selector selector = Selector.open();
@@ -18,7 +18,7 @@ public class socketHandler implements Runnable {
     public int id;
     int port;
 
-    public socketHandler(int port) throws IOException, InterruptedException {
+    public socketService(int port) throws IOException, InterruptedException {
         this.port = port;
 
         socketChannel.configureBlocking(false);
