@@ -63,22 +63,13 @@ public class socketServer implements Runnable {
         }
     }
 
-    // <<< under construction >>>
-
-    //TODO figure out how to manage users <<< busy with this >>>
-    //TODO grind aim in CSGO
-    //TODO make cheese sandwich
-    //TODO make non blocking connection client
-    //TODO make connection client multiThreaded
-    //gg
-
     // assigns keys to connected streams
     private void keyAcceptable(SelectionKey key) throws IOException {
         SocketChannel sc = serverSocketChannel.accept();
         sc.configureBlocking(false);
         sc.register(selector, key.OP_READ);
         routingTable.add(sc, port);
-        routingTable.printClients();
+//        routingTable.printClients();
     }
 
     // reads incoming messages using unique keys

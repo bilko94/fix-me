@@ -46,7 +46,8 @@ public class socketSender implements Runnable{
         for (client nonVerifiedClient : nonVerifiedClients){
             connectionMessage = new packet("connected",1,nonVerifiedClient.id);
             nonVerifiedClient.verified = true;
-            writeToSocketChannel(nonVerifiedClient.channel, connectionMessage.packetToString());
+            if (writeToSocketChannel(nonVerifiedClient.channel, connectionMessage.packetToString()) == true)
+                System.out.println(nonVerifiedClient.id + " connection verified");
         }
     }
 
@@ -63,27 +64,32 @@ public class socketSender implements Runnable{
             recipient   = routingTable.getChannel(scheduledPacket.recipient);
 
             if (!scheduledPacket.isValid())
-                writeToSocketChannel(sender.channel, new packet("invalid checksum",1,sender.id).packetToString());
+                writeToSocketChannel(sender.channel, new packet("invalid checksum (" + scheduledPacket.packetToString().replace(";","_") + ")",1,sender.id).packetToString());
 
             else if (recipient == null)
-                writeToSocketChannel(sender.channel, new packet("packet loss : '" + scheduledPacket.packetToString() + "'" ,1,sender.id).packetToString());
+                writeToSocketChannel(sender.channel, new packet("packet loss : (" + scheduledPacket.packetToString().replace(";","_") + ")" ,1,sender.id).packetToString());
 
             else if (recipient.verified == false)
-                writeToSocketChannel(sender.channel, new packet("packet loss : '" + scheduledPacket.packetToString() +"'" ,1,sender.id).packetToString());
+                writeToSocketChannel(sender.channel, new packet("packet loss : (" + scheduledPacket.packetToString().replace(";","_") +")" ,1,sender.id).packetToString());
 
             else
                 writeToSocketChannel(recipient.channel, scheduledPacket.packetToString());
         }
     }
 
-    private void writeToSocketChannel(SocketChannel channel, String message) {
+    private boolean writeToSocketChannel(SocketChannel channel, String message) {
         ByteBuffer bb = ByteBuffer.wrap(message.getBytes());
         try {
+            if (channel == null)
+                return false;
             channel.write(bb);
+            return true;
         } catch (ClosedChannelException e) {
             closeChannel(channel);
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
