@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class main {
     public static void main( String[] args ) throws InterruptedException, IOException {
 
-        int                 random;
+        int          random;
         List<market> marketArray = new ArrayList<>();
 
         random = (int) Math.floor(7 * Math.random())+3;
