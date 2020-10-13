@@ -11,13 +11,13 @@ public class main {
         market stockMarket = new market();
         stockMarket.printMarket();
 
-//        socketHandler connection = new socketHandler(5000);
-//        String msg = "";
-//        while (true){
-//            msg = connection.getResponseMessage();
-//            if (!msg.equals(""))
-//                System.out.println(msg);
-//            TimeUnit.MILLISECONDS.sleep(1000);
-//        }
+        socketHandler connection = new socketHandler(5000);
+        String msg = "";
+        while (true){
+            msg = connection.getResponseMessage();
+            if (!msg.equals(""))
+                System.out.println(msg);
+            TimeUnit.MILLISECONDS.sleep(1000);
+        }
     }
 }

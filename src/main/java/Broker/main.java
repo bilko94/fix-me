@@ -12,7 +12,6 @@ public class main {
         socketHandler connection = new socketHandler(5000);
         String msg = "";
         while (true){
-            connection.sendMessage("hi", 100000);
             msg = connection.getResponseMessage();
             if (!msg.equals(""))
                 System.out.println(msg);

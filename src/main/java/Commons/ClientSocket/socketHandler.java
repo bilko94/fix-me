@@ -111,7 +111,13 @@ public class socketHandler implements Runnable {
     private void keyReadable(SelectionKey key) throws IOException {
         SocketChannel sc = (SocketChannel) key.channel();
         ByteBuffer bb = ByteBuffer.allocate(1024);
-        sc.read(bb);
+        try {
+            sc.read(bb);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Server disconnected");
+            return;
+        }
         String result = new String(bb.array()).trim();
         System.out.println(result);
         receivedBuffer.add(new packet(result));
@@ -121,6 +127,13 @@ public class socketHandler implements Runnable {
         String msg = getTransmissionMessage();
         SocketChannel sc = (SocketChannel) key.channel();
         ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
-        sc.write(bb);
+        try {
+            sc.write(bb);
+        } catch (ClosedChannelException e) {
+            e.printStackTrace();
+            System.out.println("Server disconnected");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

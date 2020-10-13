@@ -8,7 +8,9 @@ public class routingTable {
     List<client> connectedUsers = new ArrayList<>();
 
     public void add(SocketChannel socketChannel, int port){
-        connectedUsers.add(new client(getId(),socketChannel, port));
+        client newClient = new client(getId(),socketChannel, port);
+        connectedUsers.add(newClient);
+        System.out.println(newClient.id + " connected (notVerified)");
     }
 
     public int getId(){
@@ -33,6 +35,7 @@ public class routingTable {
     public void remove(SocketChannel sc){
         for (client connectedClient : connectedUsers){
             if (connectedClient.channel.equals(sc)){
+                System.out.println(connectedClient.id + " disconnected");
                 connectedUsers.remove(connectedClient);
                 return;
             }
