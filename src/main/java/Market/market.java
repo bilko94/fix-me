@@ -65,7 +65,7 @@ public class market {
                    bool = true;
                }
             }
-            if (bool == false){
+            if (!bool){
                 newItem = new marketList(genericList[random]);
                 stockList.add(newItem);
             }
@@ -73,6 +73,9 @@ public class market {
         }
     }
 
+    public List<marketList> getStockList() {
+        return stockList;
+    }
 
     public void printMarket(){
         for (marketList item: stockList){
