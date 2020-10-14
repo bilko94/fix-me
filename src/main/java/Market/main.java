@@ -1,6 +1,7 @@
 package Market;
 
 import Commons.ClientSocketService.socketService;
+import Commons.Packet.packet;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,14 +22,12 @@ public class main {
         }
         System.out.println(marketArray.size());
         socketService connection = new socketService(5000);
-        String msg = "";
+        packet msg;
         while (true){
             msg = connection.getResponseMessage();
-            if (!msg.equals("")) {
-//              System.out.println(msg);
-
+            if (!(msg == null)) {
+                System.out.println(msg.message);
             }
-
             TimeUnit.MILLISECONDS.sleep(1000);
         }
     }

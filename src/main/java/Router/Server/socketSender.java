@@ -67,7 +67,7 @@ public class socketSender implements Runnable{
                 writeToSocketChannel(sender.channel, new packet("invalid checksum (" + scheduledPacket.packetToString().replace(";","_") + ")",1,sender.id).packetToString());
 
             else if (recipient == null)
-                writeToSocketChannel(sender.channel, new packet("packet loss : (" + scheduledPacket.packetToString().replace(";","_") + ")" ,1,sender.id).packetToString());
+                writeToSocketChannel(sender.channel, new packet("no recipient : (" + scheduledPacket.packetToString().replace(";","_") + ")" ,1,sender.id).packetToString());
 
             else if (recipient.verified == false)
                 writeToSocketChannel(sender.channel, new packet("packet loss : (" + scheduledPacket.packetToString().replace(";","_") +")" ,1,sender.id).packetToString());
