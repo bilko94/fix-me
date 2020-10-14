@@ -52,10 +52,10 @@ public class socketService implements Runnable {
         transmissionBuffer.add(newPacket);
     }
 
-    public String getResponseMessage(){
+    public packet getResponseMessage(){
         if (receivedBuffer.size() == 0)
-            return "";
-        String response = receivedBuffer.get(0).message;
+            return null;
+        packet response = receivedBuffer.get(0);
         receivedBuffer.remove(receivedBuffer.get(0));
         return response;
     }
@@ -119,8 +119,9 @@ public class socketService implements Runnable {
             return;
         }
         String result = new String(bb.array()).trim();
-        System.out.println(result);
-        receivedBuffer.add(new packet(result));
+        packet response = new packet(result);
+        if (response.isValid())
+            receivedBuffer.add(new packet(result));
     }
 
     private void keyWritable(SelectionKey key) throws IOException {
