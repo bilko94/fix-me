@@ -15,15 +15,13 @@ public class main {
             while (true){
                 requestMsg = brokerMessage.make();
                 System.out.println(requestMsg);
-                connection.sendMessage(requestMsg,10001);
+                connection.sendMessage(requestMsg,100001);
                 msg = connection.getResponseMessage();
     //            if (!(msg == null))
     //                System.out.println(msg.message);
                 TimeUnit.MILLISECONDS.sleep(1000);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

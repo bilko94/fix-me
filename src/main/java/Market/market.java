@@ -15,34 +15,34 @@ public class market {
         String[] genericList = {
                 "Corn",
                 "Oats",
-                "Rough Rice",
+                "Rough_Rice",
                 "Soybeans",
                 "Rapeseed",
-                "Soy Meal",
-                "Soybean Oil",
+                "SoyMeal",
+                "Oil",
                 "Wheat",
                 "Milk",
                 "Cocoa",
                 "Coffee",
-                "Orange Juice",
-                "Adzuki bean",
-                "Crude Oil",
+                "Orange_Juice",
+                "Adzuki_bean",
+                "Crude_Oil",
                 "Propane",
                 "Gasoline",
-                "Natural gas",
+                "Natural_gas",
                 "Ethanol",
                 "Bananas",
-                "Premium Waifu's",
-                "Terephthalic Acid",
-                "Hardwood Pulp",
+                "Premium_Waifu's",
+                "Terephthalic",
+                "Hardwood_Pulp",
                 "Copper",
                 "Gold",
                 "Platinum",
                 "Palladium",
-                "Palm Oil",
+                "Palm_Oil",
                 "Rubber",
                 "Amber",
-                "Live Cattle",
+                "Live_Cattle",
                 "Bitcoin",
                 "Oil",
                 "Gold",
@@ -52,7 +52,7 @@ public class market {
                 "Steel",
                 "Butter",
                 "Eggs",
-                "Pork Bellies"
+                "Pork_Bellies"
         };
 
         while (i > 0){
@@ -77,36 +77,37 @@ public class market {
         int i = 0;
         int prevQty = 0;
 
-        if (stockList.contains(instrument)){
-            i = stockList.indexOf(instrument);
-            marketList item = stockList.get(i);
-            prevQty = item.getStock();
-            if (prevQty > qty){
-                item.setStock(prevQty - qty);
-                return ("Executed");
+        for (marketList listItem: stockList){
+            System.out.println("Expected: "+instrument);
+            System.out.println("Have: "+listItem.getInstrument());
+            if (listItem.getInstrument().equals(instrument)){
+                System.out.println("got the item on market");
+                prevQty = listItem.getStock();
+                if (prevQty > qty){
+                    listItem.setStock(prevQty - qty);
+                    return ("Executed");
+                }
+                else {
+                    System.out.println("reject 1");
+                    return ("Rejected");
+                }
             }
-            else {
-                return ("Rejected");
-            }
-        } else {
-            return ("Rejected");
         }
-
+        return ("Rejected");
     }
 
     public String sell(String instrument, int qty){
         int i = 0;
         int prevQty = 0;
 
-        if (stockList.contains(instrument)){
-            i = stockList.indexOf(instrument);
-            marketList item = stockList.get(i);
-            prevQty = item.getStock();
-            item.setStock(prevQty + qty);
-            return ("Executed");
-        } else {
-            return ("Rejected");
+        for (marketList listItem: stockList){
+            if (listItem.getInstrument().equals(instrument)){
+                prevQty = listItem.getStock();
+                listItem.setStock(prevQty + qty);
+                return ("Executed");
+            }
         }
+        return ("Rejected");
     }
 
     public List<marketList> getStockList() {
