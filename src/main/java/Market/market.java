@@ -83,18 +83,18 @@ public class market {
             prevQty = item.getStock();
             if (prevQty > qty){
                 item.setStock(prevQty - qty);
-                return ("Success");
+                return ("Executed");
             }
             else {
-                return ("Not enough stock of "+instrument+" in marketplace");
+                return ("Rejected");
             }
         } else {
-            return ("No such commodity found in marketplace");
+            return ("Rejected");
         }
 
     }
 
-    public String sell(String instrument, int qty, int price){
+    public String sell(String instrument, int qty){
         int i = 0;
         int prevQty = 0;
 
@@ -103,11 +103,9 @@ public class market {
             marketList item = stockList.get(i);
             prevQty = item.getStock();
             item.setStock(prevQty + qty);
-            return ("Success");
+            return ("Executed");
         } else {
-            marketList newItem = new marketList(instrument);
-            newItem.setListing(qty, price);
-            return ("success");
+            return ("Rejected");
         }
     }
 
