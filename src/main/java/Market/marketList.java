@@ -12,6 +12,23 @@ public class marketList {
         stock = (int) Math.floor(100*Math.random());
     }
 
+    public void setInstrument(String instrument) {
+        this.instrument = instrument;
+    }
+
+    public void setListing(int qty, int price){
+        this.price = price;
+        this.stock = qty;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
     public String getInstrument() {
         return instrument;
     }

@@ -1,6 +1,8 @@
 package Market;
 
 import Commons.ClientSocketService.socketService;
+import Commons.*;
+import Commons.Packet.packet;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,24 +11,25 @@ import java.util.concurrent.TimeUnit;
 
 public class main {
     public static void main( String[] args ) throws InterruptedException, IOException {
+//        List<market> marketArray = new ArrayList<>();
+//        random = (int) Math.floor(7 * Math.random())+3;
 
-        int          random;
-        List<market> marketArray = new ArrayList<>();
+        market stockMarket = new market();
+        String[] info;
 
-        random = (int) Math.floor(7 * Math.random())+3;
-
-        while (random > 0){
-            marketArray.add(new market());
-            random--;
-        }
-        System.out.println(marketArray.size());
+        System.out.println(stockMarket.getStockList().size());
         socketService connection = new socketService(5000);
-        String msg = "";
+        packet msg = connection.getResponseMessage();
         while (true){
-            msg = connection.getResponseMessage();
-            if (!msg.equals("")) {
+            if (!msg.message.equals("")) {
 //              System.out.println(msg);
+                info = msg.message.split(" ");
+                if (info[0].equals("buy")) {
+                    stockMarket.buy(info[1], info[2]);
+                }
+                else if (info[0].equals("sell")) {
 
+                }
             }
 
             TimeUnit.MILLISECONDS.sleep(1000);

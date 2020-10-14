@@ -73,6 +73,44 @@ public class market {
         }
     }
 
+    public String buy(String instrument, int qty) {
+        int i = 0;
+        int prevQty = 0;
+
+        if (stockList.contains(instrument)){
+            i = stockList.indexOf(instrument);
+            marketList item = stockList.get(i);
+            prevQty = item.getStock();
+            if (prevQty > qty){
+                item.setStock(prevQty - qty);
+                return ("Success");
+            }
+            else {
+                return ("Not enough stock of "+instrument+" in marketplace");
+            }
+        } else {
+            return ("No such commodity found in marketplace");
+        }
+
+    }
+
+    public String sell(String instrument, int qty, int price){
+        int i = 0;
+        int prevQty = 0;
+
+        if (stockList.contains(instrument)){
+            i = stockList.indexOf(instrument);
+            marketList item = stockList.get(i);
+            prevQty = item.getStock();
+            item.setStock(prevQty + qty);
+            return ("Success");
+        } else {
+            marketList newItem = new marketList(instrument);
+            newItem.setListing(qty, price);
+            return ("success");
+        }
+    }
+
     public List<marketList> getStockList() {
         return stockList;
     }
