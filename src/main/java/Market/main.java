@@ -24,8 +24,11 @@ public class main {
         String msg = "";
         while (true){
             msg = connection.getResponseMessage();
-            if (!msg.equals(""))
-                System.out.println(msg);
+            if (!msg.equals("")) {
+//              System.out.println(msg);
+
+            }
+
             TimeUnit.MILLISECONDS.sleep(1000);
         }
     }

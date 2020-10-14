@@ -11,8 +11,8 @@ public class packet {
 
         msgArray = message.split(";");
         if (msgArray.length >= 4){
-            this.message = msgArray[0];
-            this.sender = Integer.parseInt(msgArray[1]);
+            this.sender = Integer.parseInt(msgArray[0]);
+            this.message = msgArray[1];
             this.recipient = Integer.parseInt(msgArray[2]);
             this.checkSum = Integer.parseInt(msgArray[3]);
         }
@@ -48,7 +48,7 @@ public class packet {
     public String packetToString(){
         String parsedMsg;
 
-        parsedMsg = message+";"+sender+";"+recipient+";"+checkSum;
+        parsedMsg = sender+";"+message+";"+recipient+";"+checkSum;
 
         return parsedMsg;
     }
