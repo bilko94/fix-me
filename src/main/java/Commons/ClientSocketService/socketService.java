@@ -1,6 +1,7 @@
 package Commons.ClientSocketService;
 
 import Commons.Packet.packet;
+import sun.net.ConnectionResetException;
 
 import java.io.*;
 import java.net.*;
@@ -113,15 +114,18 @@ public class socketService implements Runnable {
         ByteBuffer bb = ByteBuffer.allocate(1024);
         try {
             sc.read(bb);
-        } catch (IOException e) {
+        } catch (ConnectionResetException e) {
             e.printStackTrace();
             System.out.println("Server disconnected");
             return;
         }
         String result = new String(bb.array()).trim();
         packet response = new packet(result);
+        System.out.println(result);
         if (response.isValid())
             receivedBuffer.add(new packet(result));
+        else
+            System.out.println(result);
     }
 
     private void keyWritable(SelectionKey key) throws IOException {
