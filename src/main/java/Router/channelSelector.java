@@ -1,50 +1,34 @@
 package Router;
 
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class channelSelector {
     // TODO hash this shit
-    List<channel> channels = new ArrayList<>();
+    HashMap<Integer,channel> channels = new HashMap<>();
 
-    public int register(SocketChannel channel){
+    public channel register(SocketChannel channel){
         int id = getId();
-        channels.add(new channel(id, channel));
-        return id;
+        channel newChannel = new channel(id, channel);
+        channels.put(id , newChannel);
+        return newChannel;
     }
 
     public channel getChannel(int id){
-        for (channel channel : this.channels){
-            if (channel.id == id){
-                return channel;
-            }
-        }
-        return null;
+        return channels.get(id);
     }
 
-    public void remove(SocketChannel channel){
-//        for (channel connectedchannel : channels){
-//            if (connectedchannel.equals())
-//        }
+    public void remove(int id){
+        channels.remove(id);
     }
 
     public int getId(){
-        int newId = 100000;
-        while (newId < 1000000){
-            if (idAvailable(newId))
-                return newId;
-            newId++;
+        // TODO random ID
+        int newId = (int) Math.ceil(999999 * Math.random());
+        while (channels.containsKey(newId) && newId > 99999){
+            System.out.println(newId);
+            newId = (int) Math.ceil(999999 * Math.random());
         }
-        return -1;
-    }
-
-    public boolean idAvailable(int id){
-        for (channel channel : channels){
-            if (channel.id == id){
-                return false;
-            }
-        }
-        return true;
+        return newId;
     }
 }

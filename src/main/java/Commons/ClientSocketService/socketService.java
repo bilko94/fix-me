@@ -31,7 +31,7 @@ public class socketService implements Runnable {
 
         Thread clientThread = new Thread(this, "clientSocket");
         clientThread.start();
-//        awaitId();
+        awaitId();
     }
 
     public void awaitId() throws InterruptedException {

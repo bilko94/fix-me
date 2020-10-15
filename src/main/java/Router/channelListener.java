@@ -8,6 +8,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.Iterator;
 
 public class channelListener implements Runnable {
     private final ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
@@ -37,17 +38,18 @@ public class channelListener implements Runnable {
     public void run() {
         try {
             while (true) {
-                // checks if any incoming keys
                 if (selector.select() <= 0)
                     continue;
 
-                // iterates through keys
-                for (SelectionKey key : selector.selectedKeys()){
-                    // checks for incoming connections
-                    if (key.isAcceptable()) registerChannel(key);
+                Iterator keys = selector.selectedKeys().iterator();
+                SelectionKey key;
+                while (keys.hasNext()){
+                    key = (SelectionKey) keys.next();
 
-                    // removes processed key
-                    selector.selectedKeys().remove(key);
+                    if (key.isAcceptable())
+                        registerChannel(key);
+
+                    keys.remove();
                 }
             }
         } catch (IOException e) {
@@ -59,9 +61,9 @@ public class channelListener implements Runnable {
         SocketChannel sc = serverSocketChannel.accept();
         sc.configureBlocking(false);
         sc.register(selector, key.OP_READ);
-        channelSelector.register(sc);
+        channel newChannel = channelSelector.register(sc);
 
         // for exec
-        new channelThread(sc, channelSelector);
+        new channelThread(newChannel, channelSelector);
     }
 }
