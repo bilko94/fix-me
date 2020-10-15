@@ -16,7 +16,7 @@ public class socketService implements Runnable {
     private final Selector selector = Selector.open();
     List<packet> transmissionBuffer = new ArrayList<>();
     List<packet> receivedBuffer = new ArrayList<>();
-    public int id;
+    public int id = 100000;
     int port;
 
     public socketService(int port) throws IOException, InterruptedException {
@@ -31,7 +31,7 @@ public class socketService implements Runnable {
 
         Thread clientThread = new Thread(this, "clientSocket");
         clientThread.start();
-        awaitId();
+//        awaitId();
     }
 
     public void awaitId() throws InterruptedException {

@@ -17,8 +17,8 @@ public class main {
                 System.out.println(requestMsg);
                 connection.sendMessage(requestMsg,100001);
                 msg = connection.getResponseMessage();
-    //            if (!(msg == null))
-    //                System.out.println(msg.message);
+                if (!(msg == null))
+                    System.out.println(msg.message);
                 TimeUnit.MILLISECONDS.sleep(1000);
             }
         } catch (IOException | InterruptedException e) {
