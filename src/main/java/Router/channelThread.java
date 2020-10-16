@@ -1,7 +1,6 @@
 package Router;
 
 import Commons.Packet.packet;
-import sun.net.ConnectionResetException;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -18,8 +17,8 @@ public class channelThread implements Runnable {
         this.channel = channel.channel;
         this.id = channel.id;
         this.channelSelector = channelSelector;
-        Thread senderThread = new Thread(this, "hardline");
-        senderThread.start();
+//        Thread senderThread = new Thread(this, "hardline");
+//        senderThread.start();
     }
 
     @Override

@@ -9,13 +9,15 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
 
 public class channelListener implements Runnable {
     private final ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
     private final Selector selector = Selector.open();
     private channelSelector channelSelector;
+    private ExecutorService executorService;
 
-    public channelListener(int port, String serverThreadName, channelSelector channelSelector) throws IOException {
+    public channelListener(int port, String serverThreadName, channelSelector channelSelector, ExecutorService executorService) throws IOException {
         // init non blocking buffer
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -26,9 +28,12 @@ public class channelListener implements Runnable {
         // assigning routing table and packet table
         this.channelSelector = channelSelector;
 
+        // pass the executor
+        this.executorService = executorService;
+
         // starting thread
-        Thread serverThread = new Thread(this, serverThreadName);
-        serverThread.start();
+//        Thread serverThread = new Thread(this, serverThreadName);
+//        serverThread.start();
     }
 
     // server thread (receive)
@@ -64,6 +69,6 @@ public class channelListener implements Runnable {
         channel newChannel = channelSelector.register(sc);
 
         // for exec
-        new channelThread(newChannel, channelSelector);
+        executorService.submit(new channelThread(newChannel, channelSelector));
     }
 }
