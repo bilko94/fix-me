@@ -1,6 +1,7 @@
 package Commons.ClientSocketService;
 
 import Commons.Packet.packet;
+import Simulator.idList;
 import sun.net.ConnectionResetException;
 
 import java.io.*;
@@ -14,10 +15,15 @@ public class socketService implements Runnable {
 
     private final SocketChannel socketChannel = SocketChannel.open();
     private final Selector selector = Selector.open();
+    private Simulator.idList idList = new idList();
     List<packet> transmissionBuffer = new ArrayList<>();
     List<packet> receivedBuffer = new ArrayList<>();
     public int id = 100000;
     int port;
+
+    public int getId() {
+        return id;
+    }
 
     public socketService(int port) throws IOException, InterruptedException {
         this.port = port;
