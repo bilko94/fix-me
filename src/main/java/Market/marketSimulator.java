@@ -8,7 +8,14 @@ import java.util.concurrent.TimeUnit;
 
 public class marketSimulator implements Runnable{
 
+    private socketService connection = null;
     private int marketID;
+
+    public marketSimulator() throws IOException, InterruptedException {
+        this.connection = new socketService(5001);
+        marketID = connection.getId();
+    }
+
 
     public int getMarketID() {
         return marketID;
@@ -23,9 +30,6 @@ public class marketSimulator implements Runnable{
             String answer = "";
 
             stockMarket.printMarket();
-            socketService connection = null;
-            connection = new socketService(5001);
-            marketID = connection.getId();
             packet msg = connection.getResponseMessage();
             while (true){
                 msg = connection.getResponseMessage();
@@ -46,7 +50,7 @@ public class marketSimulator implements Runnable{
                 }
                 TimeUnit.MILLISECONDS.sleep(1000);
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
