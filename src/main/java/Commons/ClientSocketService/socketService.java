@@ -15,7 +15,6 @@ public class socketService implements Runnable {
 
     private final SocketChannel socketChannel = SocketChannel.open();
     private final Selector selector = Selector.open();
-    private Simulator.idList idList = new idList();
     List<packet> transmissionBuffer = new ArrayList<>();
     List<packet> receivedBuffer = new ArrayList<>();
     public int id = 100000;

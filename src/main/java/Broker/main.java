@@ -10,6 +10,5 @@ public class main {
     public static void main(String[] args) throws IOException, InterruptedException {
 
         System.out.println("moved all processes to apexSimulator");
-
     }
 }

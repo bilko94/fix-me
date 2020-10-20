@@ -44,7 +44,6 @@ public class apexSimulator{
         thread3.start();
         thread4.start();
         thread5.start();
-
     }
 
 }
