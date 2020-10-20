@@ -3,47 +3,37 @@ package Simulator;
 import Market.marketSimulator;
 
 import java.io.IOException;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class apexSimulator{
 
 
     public static void main(String[] args) throws InterruptedException, IOException {
+        //executor
+        ExecutorService executorService = Executors.newCachedThreadPool();
 
-        marketSimulator market1 = new marketSimulator();
-        marketSimulator market2 = new marketSimulator();
-        marketSimulator market3 = new marketSimulator();
-        marketSimulator market4 = new marketSimulator();
-        marketSimulator market5 = new marketSimulator();
+        //randomiser
+        Random random = new Random();
 
-        randomHandler randomM = new randomHandler(market1, market2, market3, market4, market5);
+        //amount of markets and brokers to simulate
+        int marketAmount = 5;
+        int brokerAmount = 5;
 
-        Broker.simulator broker1 = new Broker.simulator(randomM.shuffle().getMarketID());
-        Broker.simulator broker2 = new Broker.simulator(randomM.shuffle().getMarketID());
-        Broker.simulator broker3 = new Broker.simulator(randomM.shuffle().getMarketID());
-        Broker.simulator broker4 = new Broker.simulator(randomM.shuffle().getMarketID());
-        Broker.simulator broker5 = new Broker.simulator(randomM.shuffle().getMarketID());
+        //market and broker array
+        marketSimulator[] markets = new marketSimulator[marketAmount];
+        Broker.simulator[] brokers = new Broker.simulator[brokerAmount];
 
-        Thread thread6 = new Thread(market1, "simulation6");
-        Thread thread7 = new Thread(market2, "simulation7");
-        Thread thread8 = new Thread(market3, "simulation8");
-        Thread thread9 = new Thread(market4, "simulation9");
-        Thread thread10 = new Thread(market5, "simulation10");
-        Thread thread1 = new Thread(broker1, "simulation1");
-        Thread thread2 = new Thread(broker2, "simulation2");
-        Thread thread3 = new Thread(broker3, "simulation3");
-        Thread thread4 = new Thread(broker4, "simulation4");
-        Thread thread5 = new Thread(broker5, "simulation5");
+        for (int i = 0; i < marketAmount; i++) {
+            markets[i] = new marketSimulator();
+            executorService.submit(markets[i]);
+        }
 
-        thread6.start();
-        thread7.start();
-        thread8.start();
-        thread9.start();
-        thread10.start();
-        thread1.start();
-        thread2.start();
-        thread3.start();
-        thread4.start();
-        thread5.start();
+        for (int i = 0; i < brokerAmount; i++) {
+            brokers[i] = new Broker.simulator(markets[random.nextInt(brokerAmount)].getMarketID());
+            executorService.submit(brokers[i]);
+        }
     }
 
 }
