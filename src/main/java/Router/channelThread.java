@@ -17,7 +17,7 @@ public class channelThread implements Runnable {
         this.channel = channel.channel;
         this.id = channel.id;
         this.channelSelector = channelSelector;
-//        Thread senderThread = new Thread(this, "hardline");
+//        Thread senderThread = new Thread(this, "hard line");
 //        senderThread.start();
     }
 
@@ -76,7 +76,6 @@ public class channelThread implements Runnable {
             channel.write(message);
         } catch (ClosedChannelException e) {
             channelSelector.remove(channelObj.id);
-            return;
         }
     }
 }

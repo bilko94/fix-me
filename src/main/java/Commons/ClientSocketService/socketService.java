@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 public class socketService implements Runnable {
 
-    private final SocketChannel socketChannel = SocketChannel.open();
     private final Selector selector = Selector.open();
     List<packet> transmissionBuffer = new ArrayList<>();
     List<packet> receivedBuffer = new ArrayList<>();
@@ -26,6 +25,7 @@ public class socketService implements Runnable {
     public socketService(int port) throws IOException, InterruptedException {
         this.port = port;
 
+        SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(false);
         socketChannel.connect(new InetSocketAddress(InetAddress.getByName("localhost"), port));
         socketChannel.register(
@@ -130,7 +130,7 @@ public class socketService implements Runnable {
             receivedBuffer.add(new packet(result));
     }
 
-    private void keyWritable(SelectionKey key) throws IOException {
+    private void keyWritable(SelectionKey key) {
         String msg = getTransmissionMessage();
         SocketChannel sc = (SocketChannel) key.channel();
         ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());

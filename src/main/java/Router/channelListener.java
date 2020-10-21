@@ -14,10 +14,10 @@ import java.util.concurrent.ExecutorService;
 public class channelListener implements Runnable {
     private final ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
     private final Selector selector = Selector.open();
-    private channelSelector channelSelector;
-    private ExecutorService executorService;
+    private final channelSelector channelSelector;
+    private final ExecutorService executorService;
 
-    public channelListener(int port, String serverThreadName, channelSelector channelSelector, ExecutorService executorService) throws IOException {
+    public channelListener(int port, channelSelector channelSelector, ExecutorService executorService) throws IOException {
         // init non blocking buffer
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -34,12 +34,13 @@ public class channelListener implements Runnable {
 
     @Override
     public void run() {
+        Iterator keys;
         try {
             while (true) {
                 if (selector.select() <= 0)
                     continue;
 
-                Iterator keys = selector.selectedKeys().iterator();
+                keys = selector.selectedKeys().iterator();
                 SelectionKey key;
                 while (keys.hasNext()){
                     key = (SelectionKey) keys.next();
