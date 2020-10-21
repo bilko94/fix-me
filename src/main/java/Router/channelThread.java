@@ -26,7 +26,10 @@ public class channelThread implements Runnable {
         ByteBuffer bb;
         String result;
         try {
+            // relays id before any messages can be sent
             sendId();
+
+            // starts reading incoming messages
             while (true){
                 bb = ByteBuffer.allocate(1024);
                 channel.read(bb);

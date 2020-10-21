@@ -1,7 +1,6 @@
 package Commons.ClientSocketService;
 
 import Commons.Packet.packet;
-import Simulator.idList;
 import sun.net.ConnectionResetException;
 
 import java.io.*;
@@ -129,8 +128,6 @@ public class socketService implements Runnable {
         System.out.println(result);
         if (response.isValid())
             receivedBuffer.add(new packet(result));
-        else
-            System.out.println(result);
     }
 
     private void keyWritable(SelectionKey key) throws IOException {

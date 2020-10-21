@@ -30,15 +30,8 @@ public class channelListener implements Runnable {
 
         // pass the executor
         this.executorService = executorService;
-
-        // starting thread
-//        Thread serverThread = new Thread(this, serverThreadName);
-//        serverThread.start();
     }
 
-    // server thread (receive)
-    // TODO check if messages overwrite
-    // TODO rename this
     @Override
     public void run() {
         try {
@@ -68,7 +61,7 @@ public class channelListener implements Runnable {
         sc.register(selector, key.OP_READ);
         channel newChannel = channelSelector.register(sc);
 
-        // for exec
+        // start new channel thread
         executorService.submit(new channelThread(newChannel, channelSelector));
     }
 }
