@@ -17,8 +17,6 @@ public class channelThread implements Runnable {
         this.channel = channel.channel;
         this.id = channel.id;
         this.channelSelector = channelSelector;
-//        Thread senderThread = new Thread(this, "hard line");
-//        senderThread.start();
     }
 
     @Override

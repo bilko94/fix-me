@@ -52,12 +52,12 @@ public class socketService implements Runnable {
         }
     }
 
-    public void sendMessage(String message, int recipient){
+    public void sendMessage(String message, int recipient) {
         packet newPacket = new packet(message, id, recipient);
         transmissionBuffer.add(newPacket);
     }
 
-    public packet getResponseMessage(){
+    public packet getResponseMessage() {
         if (receivedBuffer.size() == 0)
             return null;
         packet response = receivedBuffer.get(0);
@@ -65,7 +65,7 @@ public class socketService implements Runnable {
         return response;
     }
 
-    private String getTransmissionMessage(){
+    private String getTransmissionMessage() {
         if (transmissionBuffer.size() == 0)
             return "";
         String message = transmissionBuffer.get(0).packetToString();
@@ -78,7 +78,7 @@ public class socketService implements Runnable {
         try {
             while (true) {
                 // checks if any incoming keys
-                if (selector.select() > 0){
+                if (selector.select() > 0) {
                     // iterates through keys
                     for (SelectionKey key : selector.selectedKeys()){
                         // attempts connection
@@ -99,7 +99,7 @@ public class socketService implements Runnable {
         }
     }
 
-    private boolean keyConnectable(SelectionKey key){
+    private boolean keyConnectable(SelectionKey key) {
         SocketChannel sc = (SocketChannel) key.channel();
         try {
             while (sc.isConnectionPending()) {
