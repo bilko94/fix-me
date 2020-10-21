@@ -1,5 +1,6 @@
 package Simulator;
 
+import Broker.brokerSimulator;
 import Market.marketSimulator;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class apexSimulator{
 
         //market and broker array
         marketSimulator[] markets = new marketSimulator[marketAmount];
-        Broker.simulator[] brokers = new Broker.simulator[brokerAmount];
+        brokerSimulator[] brokers = new brokerSimulator[brokerAmount];
 
         for (int i = 0; i < marketAmount; i++) {
             markets[i] = new marketSimulator();
@@ -31,7 +32,7 @@ public class apexSimulator{
         }
 
         for (int i = 0; i < brokerAmount; i++) {
-            brokers[i] = new Broker.simulator(markets[random.nextInt(brokerAmount)].getMarketID());
+            brokers[i] = new brokerSimulator(markets[random.nextInt(brokerAmount)].getMarketID());
             executorService.submit(brokers[i]);
         }
     }

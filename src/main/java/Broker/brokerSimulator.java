@@ -6,10 +6,10 @@ import Commons.Packet.packet;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class simulator implements Runnable {
+public class brokerSimulator implements Runnable {
 
     private int recipient;
-    public simulator(int ID) {
+    public brokerSimulator(int ID) {
         recipient = ID;
     }
 
