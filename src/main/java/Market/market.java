@@ -5,13 +5,13 @@ import java.util.List;
 
 public class market {
 
-    private List<marketList> stockList = new ArrayList<>();
+    private final List<marketList> stockList = new ArrayList<>();
 
     public market() {
         int  random;
         int     i = 20;
 
-//        random = Math.floor(41 * Math.random());
+        // Market list commodities (this is accessed when generating markets)
         String[] genericList = {
                 "Corn",
                 "Oats",
@@ -61,9 +61,10 @@ public class market {
             boolean bool = false;
 
             for (marketList item: stockList){
-               if (item.getInstrument().equals(genericList[random])){
-                   bool = true;
-               }
+                if (item.getInstrument().equals(genericList[random])) {
+                    bool = true;
+                    break;
+                }
             }
             if (!bool){
                 newItem = new marketList(genericList[random]);
@@ -74,21 +75,16 @@ public class market {
     }
 
     public String buy(String instrument, int qty) {
-        int i = 0;
         int prevQty = 0;
 
         for (marketList listItem: stockList){
-            System.out.println("Expected: "+instrument);
-            System.out.println("Have: "+listItem.getInstrument());
             if (listItem.getInstrument().equals(instrument)){
-                System.out.println("got the item on market");
                 prevQty = listItem.getStock();
                 if (prevQty > qty){
                     listItem.setStock(prevQty - qty);
                     return ("Executed");
                 }
                 else {
-                    System.out.println("reject 1");
                     return ("Rejected");
                 }
             }
@@ -115,8 +111,9 @@ public class market {
     }
 
     public void printMarket(){
+        //simple printer to visualize the market
         for (marketList item: stockList){
-            System.out.println(item.getInstrument()+" : Price: "+item.getPrice()+" : Stock: "+item.getStock());
+            System.out.println(item.getInstrument()+" || Price: "+item.getPrice()+" || Stock: "+item.getStock());
         }
     }
 }

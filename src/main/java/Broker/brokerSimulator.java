@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class brokerSimulator implements Runnable {
 
-    private int recipient;
+    private final int recipient;
     public brokerSimulator(int ID) {
         recipient = ID;
     }
@@ -16,13 +16,14 @@ public class brokerSimulator implements Runnable {
     @Override
     public void run() {
         try {
+            //Service connection
             socketService connection = new socketService(5000);
             String  requestMsg;
             packet  msg;
 
+            // buy/sell loop for simulation.
             boolean bool = true;
             while (true){
-//                requestMsg = brokerMessage.make();
                 if (bool) {
                     requestMsg = "Buy Oil 7";
                     bool = false;
