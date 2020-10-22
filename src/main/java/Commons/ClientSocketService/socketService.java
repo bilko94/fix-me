@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 public class socketService implements Runnable {
 
-    private final SocketChannel socketChannel = SocketChannel.open();
     private final Selector selector = Selector.open();
     List<packet> transmissionBuffer = new ArrayList<>();
     List<packet> receivedBuffer = new ArrayList<>();
@@ -26,6 +25,7 @@ public class socketService implements Runnable {
     public socketService(int port) throws IOException, InterruptedException {
         this.port = port;
 
+        SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(false);
         socketChannel.connect(new InetSocketAddress(InetAddress.getByName("localhost"), port));
         socketChannel.register(
@@ -52,12 +52,12 @@ public class socketService implements Runnable {
         }
     }
 
-    public void sendMessage(String message, int recipient){
+    public void sendMessage(String message, int recipient) {
         packet newPacket = new packet(message, id, recipient);
         transmissionBuffer.add(newPacket);
     }
 
-    public packet getResponseMessage(){
+    public packet getResponseMessage() {
         if (receivedBuffer.size() == 0)
             return null;
         packet response = receivedBuffer.get(0);
@@ -65,7 +65,7 @@ public class socketService implements Runnable {
         return response;
     }
 
-    private String getTransmissionMessage(){
+    private String getTransmissionMessage() {
         if (transmissionBuffer.size() == 0)
             return "";
         String message = transmissionBuffer.get(0).packetToString();
@@ -78,7 +78,7 @@ public class socketService implements Runnable {
         try {
             while (true) {
                 // checks if any incoming keys
-                if (selector.select() > 0){
+                if (selector.select() > 0) {
                     // iterates through keys
                     for (SelectionKey key : selector.selectedKeys()){
                         // attempts connection
@@ -99,7 +99,7 @@ public class socketService implements Runnable {
         }
     }
 
-    private boolean keyConnectable(SelectionKey key){
+    private boolean keyConnectable(SelectionKey key) {
         SocketChannel sc = (SocketChannel) key.channel();
         try {
             while (sc.isConnectionPending()) {
@@ -128,11 +128,9 @@ public class socketService implements Runnable {
         System.out.println(result);
         if (response.isValid())
             receivedBuffer.add(new packet(result));
-        else
-            System.out.println(result);
     }
 
-    private void keyWritable(SelectionKey key) throws IOException {
+    private void keyWritable(SelectionKey key) {
         String msg = getTransmissionMessage();
         SocketChannel sc = (SocketChannel) key.channel();
         ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());

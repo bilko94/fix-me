@@ -23,7 +23,6 @@ public class channelSelector {
     }
 
     public int getId(){
-        // TODO random ID
         int newId = (int) Math.ceil(999999 * Math.random());
         while (channels.containsKey(newId) && newId > 99999){
             System.out.println(newId);

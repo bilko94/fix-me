@@ -14,9 +14,9 @@ public class main {
 
             // init socket listeners
             // for exec
-            executorService.submit(new channelListener(5000,"brokerListener", channelSelector, executorService));
+            executorService.submit(new channelListener(5000, channelSelector, executorService));
             // for exec
-            executorService.submit(new channelListener(5001,"marketListener", channelSelector, executorService));
+            executorService.submit(new channelListener(5001, channelSelector, executorService));
         } catch (IOException e) {
             e.printStackTrace();
         }

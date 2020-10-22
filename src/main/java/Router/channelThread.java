@@ -17,8 +17,6 @@ public class channelThread implements Runnable {
         this.channel = channel.channel;
         this.id = channel.id;
         this.channelSelector = channelSelector;
-//        Thread senderThread = new Thread(this, "hardline");
-//        senderThread.start();
     }
 
     @Override
@@ -26,7 +24,10 @@ public class channelThread implements Runnable {
         ByteBuffer bb;
         String result;
         try {
+            // relays id before any messages can be sent
             sendId();
+
+            // starts reading incoming messages
             while (true){
                 bb = ByteBuffer.allocate(1024);
                 channel.read(bb);
@@ -73,7 +74,6 @@ public class channelThread implements Runnable {
             channel.write(message);
         } catch (ClosedChannelException e) {
             channelSelector.remove(channelObj.id);
-            return;
         }
     }
 }
