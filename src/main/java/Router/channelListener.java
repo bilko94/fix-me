@@ -34,32 +34,20 @@ public class channelListener implements Runnable {
 
     @Override
     public void run() {
-        Iterator keys;
         try {
             while (true) {
-                if (selector.select() <= 0)
-                    continue;
-
-                keys = selector.selectedKeys().iterator();
-                SelectionKey key;
-                while (keys.hasNext()){
-                    key = (SelectionKey) keys.next();
-
-                    if (key.isAcceptable())
-                        registerChannel(key);
-
-                    keys.remove();
-                }
+                selector.select();
+                registerChannel();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void registerChannel(SelectionKey key) throws IOException {
+    public void registerChannel() throws IOException {
         SocketChannel sc = serverSocketChannel.accept();
         sc.configureBlocking(false);
-        sc.register(selector, key.OP_READ);
+
         channel newChannel = channelSelector.register(sc);
 
         // start new channel thread

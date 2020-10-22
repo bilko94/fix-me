@@ -45,33 +45,31 @@ public class channelThread implements Runnable {
 
     public void sendId() throws IOException {
         packet idPacket = new packet("connected",1,this.id);
-        ByteBuffer bb = ByteBuffer.wrap(idPacket.packetToString().getBytes());
-        writeToChannel(channelSelector.getChannel(this.id),bb);
+        writeToChannel(channelSelector.getChannel(this.id), idPacket.packetToString());
     }
 
     public void sendPacket(packet scheduledPacket) throws IOException {
         channel recipient = channelSelector.getChannel(scheduledPacket.recipient);
-        ByteBuffer bb;
 
+        //TODO split up
         if (!scheduledPacket.isValid()){
             String inValidPacketMsg = "invalid checksum (" + scheduledPacket.packetToString().replace(";","_") + ")";
-            bb = ByteBuffer.wrap(new packet(inValidPacketMsg, 1, 1).packetToString().getBytes());
-            writeToChannel(channelSelector.getChannel(this.id), bb);
+            writeToChannel(channelSelector.getChannel(this.id), new packet(inValidPacketMsg, 1, 1).packetToString());
         }
         else if (recipient == null){
             String noRecipientMsg = "cannot find " + scheduledPacket.recipient + ": (" + scheduledPacket.packetToString().replace(";","_") + ")";
-            bb = ByteBuffer.wrap(new packet(noRecipientMsg, 1, 1).packetToString().getBytes());
-            writeToChannel(channelSelector.getChannel(this.id), bb);
+            writeToChannel(channelSelector.getChannel(this.id), new packet(noRecipientMsg, 1, 1).packetToString());
         }
         else {
-            bb = ByteBuffer.wrap(scheduledPacket.packetToString().getBytes());
-            writeToChannel(recipient, bb);
+            writeToChannel(recipient, scheduledPacket.packetToString());
         }
     }
 
-    public void writeToChannel(channel channelObj, ByteBuffer message) throws IOException {
+    public void writeToChannel(channel channelObj, String message) throws IOException {
+        ByteBuffer bb;
         try {
-            channel.write(message);
+            bb = ByteBuffer.wrap(message.getBytes());
+            channel.write(bb);
         } catch (ClosedChannelException e) {
             channelSelector.remove(channelObj.id);
         }

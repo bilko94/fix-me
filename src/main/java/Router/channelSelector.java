@@ -8,7 +8,7 @@ public class channelSelector {
     HashMap<Integer,channel> channels = new HashMap<>();
 
     public channel register(SocketChannel channel){
-        int id = getId();
+        int id = newId();
         channel newChannel = new channel(id, channel);
         channels.put(id , newChannel);
         return newChannel;
@@ -22,7 +22,7 @@ public class channelSelector {
         channels.remove(id);
     }
 
-    public int getId(){
+    public int newId(){
         int newId = (int) Math.ceil(999999 * Math.random());
         while (channels.containsKey(newId) && newId > 99999){
             System.out.println(newId);
