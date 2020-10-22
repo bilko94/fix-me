@@ -14,7 +14,7 @@ public class apexSimulator{
         //executor
         ExecutorService executorService = Executors.newCachedThreadPool();
 
-        //randomiser
+        //randomizer
         Random random = new Random();
 
         //amount of markets and brokers to simulate

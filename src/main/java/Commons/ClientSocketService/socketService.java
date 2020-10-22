@@ -1,7 +1,6 @@
 package Commons.ClientSocketService;
 
 import Commons.Packet.packet;
-import Simulator.idList;
 import sun.net.ConnectionResetException;
 
 import java.io.*;

@@ -24,10 +24,10 @@ public class simulator implements Runnable {
             while (true){
 //                requestMsg = brokerMessage.make();
                 if (bool) {
-                    requestMsg = "Buy Gold 7";
+                    requestMsg = "Buy Oil 7";
                     bool = false;
                 } else {
-                    requestMsg = "Sell Gold 7";
+                    requestMsg = "Sell Oil 7";
                     bool = true;
                 }
                 System.out.println(requestMsg);
