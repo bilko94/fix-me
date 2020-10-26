@@ -19,24 +19,20 @@ public class BrokerSimulator implements Runnable {
             //Service connection
             SocketService connection = new SocketService(5000);
             String  requestMsg;
-            Packet msg;
+            Packet incomingResponse;
 
             // buy/sell loop for simulation.
             boolean bool = true;
             while (true){
                 if (bool) {
-                    requestMsg = "Buy Oil 7";
+                    requestMsg = "buy Oil 7";
                     bool = false;
                 } else {
-                    requestMsg = "Sell Oil 7";
+                    requestMsg = "sell Oil 7";
                     bool = true;
                 }
-                System.out.println(requestMsg);
-                connection.sendMessage(requestMsg,recipient);
-                msg = connection.getResponseMessage();
-                if (!(msg == null))
-                    System.out.println(msg.message);
-                TimeUnit.MILLISECONDS.sleep(3000);
+                connection.sendMessage(requestMsg, recipient);
+                TimeUnit.MILLISECONDS.sleep(1000);
             }
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();

@@ -115,5 +115,6 @@ public class Market {
         for (MarketList item: stockList){
             System.out.println(item.getInstrument()+" || Price: "+item.getPrice()+" || Stock: "+item.getStock());
         }
+        System.out.print("\n\n");
     }
 }

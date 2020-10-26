@@ -42,7 +42,6 @@ public class SocketService implements Runnable {
         while (true){
             if (receivedBuffer.size() > 0){
                 if (receivedBuffer.get(0).sender == 1){
-                    System.out.println("assigned id == " + receivedBuffer.get(0).recipient);
                     id = receivedBuffer.get(0).recipient;
                     receivedBuffer.clear();
                     return;
@@ -107,7 +106,7 @@ public class SocketService implements Runnable {
             }
         } catch (IOException e) {
             key.cancel();
-            System.out.println("cannot connect to server on port" + port);
+            System.out.println("cannot connect to server on port " + port);
             return false;
         }
         return true;

@@ -10,12 +10,16 @@ public class MarketSimulator implements Runnable{
 
     private SocketService connection = null;
     private final int marketID;
+    private Market stockMarket = new Market();
 
     public MarketSimulator() throws IOException, InterruptedException {
         this.connection = new SocketService(5001);
         marketID = connection.getId();
     }
 
+    public void printMarket(){
+        stockMarket.printMarket();
+    }
 
     public int getMarketID() {
         return marketID;
@@ -25,11 +29,10 @@ public class MarketSimulator implements Runnable{
     public void run() {
 
         try {
-            Market stockMarket = new Market();
             String[] info;
             String answer = "";
 
-            stockMarket.printMarket();
+            System.out.println("market id = " + marketID );
             Packet msg;
             while (true){
                 msg = connection.getResponseMessage();
@@ -37,16 +40,16 @@ public class MarketSimulator implements Runnable{
                     info = msg.message.split(" ");
                     if (info[0].equals("buy")) {
                         answer = stockMarket.buy(info[1], Integer.parseInt(info[2]));
+                        System.out.println(msg.sender + " order : '" + msg.message + "' was " + answer);
                         connection.sendMessage(answer, msg.sender);
-                        stockMarket.printMarket();
                     }
                     else if (info[0].equals("sell")) {
                         answer = stockMarket.sell(info[1], Integer.parseInt(info[2]));
                         connection.sendMessage(answer, msg.sender);
-                        stockMarket.printMarket();
+                        System.out.println(msg.sender + " buy order of " + info[2] + " " + info[1] + " was " + answer);
                     }
                 }
-                TimeUnit.MILLISECONDS.sleep(1000);
+                TimeUnit.MILLISECONDS.sleep(10);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -6,6 +6,7 @@ import Commons.Packet.Packet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -22,13 +23,13 @@ public class Main {
                 marketID = Integer.parseInt(msg[3]);
                 requestMsg = msg[0] + " " + msg[1] + " " + msg[2];
 
-                System.out.println(requestMsg);
                 connection.sendMessage(requestMsg, marketID);
                 incomingResponse = connection.getResponseMessage();
                 while (incomingResponse == null){
                     incomingResponse = connection.getResponseMessage();
                 }
-                System.out.println(incomingResponse.message);
+                System.out.println("\n\n " + incomingResponse.message);
+                TimeUnit.MILLISECONDS.sleep(1000);
             }
         } catch (IOException e) {
             e.printStackTrace();
