@@ -3,18 +3,18 @@ package Router;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 
-public class channelSelector {
+public class ChannelSelector {
     // TODO hash this shit
-    HashMap<Integer,channel> channels = new HashMap<>();
+    HashMap<Integer, Channel> channels = new HashMap<>();
 
-    public channel register(SocketChannel channel){
+    public Channel register(SocketChannel channel){
         int id = newId();
-        channel newChannel = new channel(id, channel);
+        Channel newChannel = new Channel(id, channel);
         channels.put(id , newChannel);
         return newChannel;
     }
 
-    public channel getChannel(int id){
+    public Channel getChannel(int id){
         return channels.get(id);
     }
 

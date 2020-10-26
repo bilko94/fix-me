@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class main {
+public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
-        marketSimulator market = new marketSimulator();
+        MarketSimulator market = new MarketSimulator();
         executorService.submit(market);
     }
 }

@@ -1,6 +1,6 @@
 package Commons.ClientSocketService;
 
-import Commons.Packet.packet;
+import Commons.Packet.Packet;
 import sun.net.ConnectionResetException;
 
 import java.io.*;
@@ -10,11 +10,11 @@ import java.nio.channels.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class socketService implements Runnable {
+public class SocketService implements Runnable {
 
     private final Selector selector = Selector.open();
-    List<packet> transmissionBuffer = new ArrayList<>();
-    List<packet> receivedBuffer = new ArrayList<>();
+    List<Packet> transmissionBuffer = new ArrayList<>();
+    List<Packet> receivedBuffer = new ArrayList<>();
     public int id = 100000;
     int port;
 
@@ -22,7 +22,7 @@ public class socketService implements Runnable {
         return id;
     }
 
-    public socketService(int port) throws IOException, InterruptedException {
+    public SocketService(int port) throws IOException, InterruptedException {
         this.port = port;
 
         SocketChannel socketChannel = SocketChannel.open();
@@ -53,14 +53,14 @@ public class socketService implements Runnable {
     }
 
     public void sendMessage(String message, int recipient) {
-        packet newPacket = new packet(message, id, recipient);
+        Packet newPacket = new Packet(message, id, recipient);
         transmissionBuffer.add(newPacket);
     }
 
-    public packet getResponseMessage() {
+    public Packet getResponseMessage() {
         if (receivedBuffer.size() == 0)
             return null;
-        packet response = receivedBuffer.get(0);
+        Packet response = receivedBuffer.get(0);
         receivedBuffer.remove(receivedBuffer.get(0));
         return response;
     }
@@ -124,10 +124,9 @@ public class socketService implements Runnable {
             return;
         }
         String result = new String(bb.array()).trim();
-        packet response = new packet(result);
-        System.out.println(result);
+        Packet response = new Packet(result);
         if (response.isValid())
-            receivedBuffer.add(new packet(result));
+            receivedBuffer.add(new Packet(result));
     }
 
     private void keyWritable(SelectionKey key) {

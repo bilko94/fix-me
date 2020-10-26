@@ -1,17 +1,17 @@
 package Broker;
 
-import Commons.ClientSocketService.socketService;
-import Commons.Packet.packet;
+import Commons.ClientSocketService.SocketService;
+import Commons.Packet.Packet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
 
-public class main {
+public class Main {
     public static void main(String[] args) throws IOException, InterruptedException {
-        socketService connection = new socketService(5000);
+        SocketService connection = new SocketService(5000);
         String requestMsg;
+        Packet incomingResponse;
 
         try {
             while (true){
@@ -20,11 +20,15 @@ public class main {
 
                 msg = make().split(" ");
                 marketID = Integer.parseInt(msg[3]);
-                requestMsg = msg[0] + msg[1] + msg[2];
+                requestMsg = msg[0] + " " + msg[1] + " " + msg[2];
 
                 System.out.println(requestMsg);
                 connection.sendMessage(requestMsg, marketID);
-                System.out.println(connection.getResponseMessage());
+                incomingResponse = connection.getResponseMessage();
+                while (incomingResponse == null){
+                    incomingResponse = connection.getResponseMessage();
+                }
+                System.out.println(incomingResponse.message);
             }
         } catch (IOException e) {
             e.printStackTrace();

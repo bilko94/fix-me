@@ -1,14 +1,14 @@
 package Simulator;
 
-import Broker.brokerSimulator;
-import Market.marketSimulator;
+import Broker.BrokerSimulator;
+import Market.MarketSimulator;
 
 import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class apexSimulator{
+public class ApexSimulator {
 
 
     public static void main(String[] args) throws InterruptedException, IOException {
@@ -23,16 +23,16 @@ public class apexSimulator{
         int brokerAmount = 5;
 
         //market and broker array
-        marketSimulator[] markets = new marketSimulator[marketAmount];
-        brokerSimulator[] brokers = new brokerSimulator[brokerAmount];
+        MarketSimulator[] markets = new MarketSimulator[marketAmount];
+        BrokerSimulator[] brokers = new BrokerSimulator[brokerAmount];
 
         for (int i = 0; i < marketAmount; i++) {
-            markets[i] = new marketSimulator();
+            markets[i] = new MarketSimulator();
             executorService.submit(markets[i]);
         }
 
         for (int i = 0; i < brokerAmount; i++) {
-            brokers[i] = new brokerSimulator(markets[random.nextInt(brokerAmount)].getMarketID());
+            brokers[i] = new BrokerSimulator(markets[random.nextInt(brokerAmount)].getMarketID());
             executorService.submit(brokers[i]);
         }
     }

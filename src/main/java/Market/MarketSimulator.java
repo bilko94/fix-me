@@ -1,18 +1,18 @@
 package Market;
 
-import Commons.ClientSocketService.socketService;
-import Commons.Packet.packet;
+import Commons.ClientSocketService.SocketService;
+import Commons.Packet.Packet;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class marketSimulator implements Runnable{
+public class MarketSimulator implements Runnable{
 
-    private socketService connection = null;
+    private SocketService connection = null;
     private final int marketID;
 
-    public marketSimulator() throws IOException, InterruptedException {
-        this.connection = new socketService(5001);
+    public MarketSimulator() throws IOException, InterruptedException {
+        this.connection = new SocketService(5001);
         marketID = connection.getId();
     }
 
@@ -25,12 +25,12 @@ public class marketSimulator implements Runnable{
     public void run() {
 
         try {
-            market stockMarket = new market();
+            Market stockMarket = new Market();
             String[] info;
             String answer = "";
 
             stockMarket.printMarket();
-            packet msg;
+            Packet msg;
             while (true){
                 msg = connection.getResponseMessage();
                 if (!(msg == null)) {

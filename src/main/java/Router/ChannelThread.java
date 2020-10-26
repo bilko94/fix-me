@@ -1,6 +1,6 @@
 package Router;
 
-import Commons.Packet.packet;
+import Commons.Packet.Packet;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -8,12 +8,12 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 
-public class channelThread implements Runnable {
+public class ChannelThread implements Runnable {
     SocketChannel channel;
     int id;
-    channelSelector channelSelector;
+    ChannelSelector channelSelector;
 
-    public channelThread(channel channel, channelSelector channelSelector){
+    public ChannelThread(Channel channel, ChannelSelector channelSelector){
         this.channel = channel.channel;
         this.id = channel.id;
         this.channelSelector = channelSelector;
@@ -33,7 +33,7 @@ public class channelThread implements Runnable {
                 channel.read(bb);
                 result = new String(bb.array()).trim();
                 if (result.length() > 0){
-                    sendPacket(new packet(result));
+                    sendPacket(new Packet(result));
                 }
             }
         } catch (SocketException e) {
@@ -44,32 +44,32 @@ public class channelThread implements Runnable {
     }
 
     public void sendId() throws IOException {
-        packet idPacket = new packet("connected",1,this.id);
+        Packet idPacket = new Packet("connected",1,this.id);
         writeToChannel(channelSelector.getChannel(this.id), idPacket.packetToString());
     }
 
-    public void sendPacket(packet scheduledPacket) throws IOException {
-        channel recipient = channelSelector.getChannel(scheduledPacket.recipient);
+    public void sendPacket(Packet scheduledPacket) throws IOException {
+        Channel recipient = channelSelector.getChannel(scheduledPacket.recipient);
 
         //TODO split up
         if (!scheduledPacket.isValid()){
             String inValidPacketMsg = "invalid checksum (" + scheduledPacket.packetToString().replace(";","_") + ")";
-            writeToChannel(channelSelector.getChannel(this.id), new packet(inValidPacketMsg, 1, 1).packetToString());
+            writeToChannel(channelSelector.getChannel(this.id), new Packet(inValidPacketMsg, 1, 1).packetToString());
         }
         else if (recipient == null){
             String noRecipientMsg = "cannot find " + scheduledPacket.recipient + ": (" + scheduledPacket.packetToString().replace(";","_") + ")";
-            writeToChannel(channelSelector.getChannel(this.id), new packet(noRecipientMsg, 1, 1).packetToString());
+            writeToChannel(channelSelector.getChannel(this.id), new Packet(noRecipientMsg, 1, 1).packetToString());
         }
         else {
             writeToChannel(recipient, scheduledPacket.packetToString());
         }
     }
 
-    public void writeToChannel(channel channelObj, String message) throws IOException {
+    public void writeToChannel(Channel channelObj, String message) throws IOException {
         ByteBuffer bb;
         try {
             bb = ByteBuffer.wrap(message.getBytes());
-            channel.write(bb);
+            channelObj.channel.write(bb);
         } catch (ClosedChannelException e) {
             channelSelector.remove(channelObj.id);
         }

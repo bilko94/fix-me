@@ -3,11 +3,11 @@ package Market;
 import java.util.ArrayList;
 import java.util.List;
 
-public class market {
+public class Market {
 
-    private final List<marketList> stockList = new ArrayList<>();
+    private final List<MarketList> stockList = new ArrayList<>();
 
-    public market() {
+    public Market() {
         int  random;
         int     i = 20;
 
@@ -57,17 +57,17 @@ public class market {
 
         while (i > 0){
             random = (int) Math.floor(40 * Math.random());
-            marketList newItem;
+            MarketList newItem;
             boolean bool = false;
 
-            for (marketList item: stockList){
+            for (MarketList item: stockList){
                 if (item.getInstrument().equals(genericList[random])) {
                     bool = true;
                     break;
                 }
             }
             if (!bool){
-                newItem = new marketList(genericList[random]);
+                newItem = new MarketList(genericList[random]);
                 stockList.add(newItem);
             }
             i--;
@@ -77,7 +77,7 @@ public class market {
     public String buy(String instrument, int qty) {
         int prevQty = 0;
 
-        for (marketList listItem: stockList){
+        for (MarketList listItem: stockList){
             if (listItem.getInstrument().equals(instrument)){
                 prevQty = listItem.getStock();
                 if (prevQty > qty){
@@ -96,7 +96,7 @@ public class market {
         int i = 0;
         int prevQty = 0;
 
-        for (marketList listItem: stockList){
+        for (MarketList listItem: stockList){
             if (listItem.getInstrument().equals(instrument)){
                 prevQty = listItem.getStock();
                 listItem.setStock(prevQty + qty);
@@ -106,13 +106,13 @@ public class market {
         return ("Rejected");
     }
 
-    public List<marketList> getStockList() {
+    public List<MarketList> getStockList() {
         return stockList;
     }
 
     public void printMarket(){
         //simple printer to visualize the market
-        for (marketList item: stockList){
+        for (MarketList item: stockList){
             System.out.println(item.getInstrument()+" || Price: "+item.getPrice()+" || Stock: "+item.getStock());
         }
     }

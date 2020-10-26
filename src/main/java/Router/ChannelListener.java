@@ -8,16 +8,15 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 
-public class channelListener implements Runnable {
+public class ChannelListener implements Runnable {
     private final ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
     private final Selector selector = Selector.open();
-    private final channelSelector channelSelector;
+    private final ChannelSelector channelSelector;
     private final ExecutorService executorService;
 
-    public channelListener(int port, channelSelector channelSelector, ExecutorService executorService) throws IOException {
+    public ChannelListener(int port, ChannelSelector channelSelector, ExecutorService executorService) throws IOException {
         // init non blocking buffer
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
@@ -48,9 +47,9 @@ public class channelListener implements Runnable {
         SocketChannel sc = serverSocketChannel.accept();
         sc.configureBlocking(false);
 
-        channel newChannel = channelSelector.register(sc);
+        Channel newChannel = channelSelector.register(sc);
 
         // start new channel thread
-        executorService.submit(new channelThread(newChannel, channelSelector));
+        executorService.submit(new ChannelThread(newChannel, channelSelector));
     }
 }

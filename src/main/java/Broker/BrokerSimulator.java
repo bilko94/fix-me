@@ -1,15 +1,15 @@
 package Broker;
 
-import Commons.ClientSocketService.socketService;
-import Commons.Packet.packet;
+import Commons.ClientSocketService.SocketService;
+import Commons.Packet.Packet;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class brokerSimulator implements Runnable {
+public class BrokerSimulator implements Runnable {
 
     private final int recipient;
-    public brokerSimulator(int ID) {
+    public BrokerSimulator(int ID) {
         recipient = ID;
     }
 
@@ -17,9 +17,9 @@ public class brokerSimulator implements Runnable {
     public void run() {
         try {
             //Service connection
-            socketService connection = new socketService(5000);
+            SocketService connection = new SocketService(5000);
             String  requestMsg;
-            packet  msg;
+            Packet msg;
 
             // buy/sell loop for simulation.
             boolean bool = true;

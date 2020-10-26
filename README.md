@@ -13,13 +13,13 @@ sudo apt install maven
 mvn clean package
 
 start the router:
-java -cp ./target/fixme.jar Router.main
+java -cp ./target/fixme.jar Router.Main
 
 start a broker:
-java -cp ./target/fixme.jar Broker.main
+java -cp ./target/fixme.jar Broker.Main
 
 start a market:
-java -cp ./target/fixme.jar Market.main
+java -cp ./target/fixme.jar Market.Main
 
 start a simulation (router has to be running to simulate):
-java -cp ./target/fixme.jar Simulator.apexSimulator
+java -cp ./target/fixme.jar Simulator.ApexSimulator

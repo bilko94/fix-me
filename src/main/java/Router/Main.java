@@ -4,19 +4,19 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class main {
+public class Main {
     public static void main( String[] args )
     {
         try {
             // init channel selector
-            channelSelector channelSelector = new channelSelector();
+            ChannelSelector channelSelector = new ChannelSelector();
             ExecutorService executorService = Executors.newCachedThreadPool();
 
             // init socket listeners
             // for exec
-            executorService.submit(new channelListener(5000, channelSelector, executorService));
+            executorService.submit(new ChannelListener(5000, channelSelector, executorService));
             // for exec
-            executorService.submit(new channelListener(5001, channelSelector, executorService));
+            executorService.submit(new ChannelListener(5001, channelSelector, executorService));
         } catch (IOException e) {
             e.printStackTrace();
         }

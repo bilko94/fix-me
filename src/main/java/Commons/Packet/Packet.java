@@ -1,12 +1,12 @@
 package Commons.Packet;
 
-public class packet {
+public class Packet {
     public int sender;
     public int recipient;
     public int checkSum;
     public String message;
 
-    public packet(String message) {
+    public Packet(String message) {
         String[] msgArray;
 
         msgArray = message.split(";");
@@ -22,7 +22,7 @@ public class packet {
 
     }
 
-    public packet(String message, int sender, int recipient){
+    public Packet(String message, int sender, int recipient){
         this.message = message;
         this.sender = sender;
         this.recipient = recipient;

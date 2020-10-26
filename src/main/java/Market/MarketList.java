@@ -1,12 +1,12 @@
 package Market;
 
-public class marketList {
+public class MarketList {
 
     private String  instrument;
     private int     price;
     private int     stock;
 
-    public marketList(String item){
+    public MarketList(String item){
         instrument = item;
         price = (int) Math.floor(5000*Math.random());
         stock = (int) Math.floor(100*Math.random());
