@@ -61,7 +61,7 @@ public class ChannelThread implements Runnable {
             writeToChannel(channelSelector.getChannel(this.id), new Packet(noRecipientMsg, 1, 1).packetToString());
         }
         else {
-            System.out.println("Sending message : '" + scheduledPacket.packetToString() + "' to : " + scheduledPacket.recipient + " from : " + id);
+            System.out.println("Sending message : '" + scheduledPacket.packetToString() + "' .... from : " + id + " >>> to : " + scheduledPacket.recipient);
             writeToChannel(recipient, scheduledPacket.packetToString());
         }
     }

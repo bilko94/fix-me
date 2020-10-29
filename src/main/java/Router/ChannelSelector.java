@@ -24,7 +24,7 @@ public class ChannelSelector {
 
     public int newId(){
         int newId = (int) Math.ceil(999999 * Math.random());
-        while (channels.containsKey(newId) && newId < 100000){
+        while (channels.containsKey(newId) || newId < 100000){
             System.out.println(newId);
             newId = (int) Math.ceil(999999 * Math.random());
         }

@@ -46,7 +46,7 @@ public class MarketSimulator implements Runnable{
                     else if (info[0].equals("sell")) {
                         answer = stockMarket.sell(info[1], Integer.parseInt(info[2]));
                         connection.sendMessage(answer, msg.sender);
-                        System.out.println(msg.sender + " buy order of " + info[2] + " " + info[1] + " was " + answer);
+                        System.out.println(msg.sender + " sale  : '" + msg.message + "' was " + answer);
                     }
                 }
                 TimeUnit.MILLISECONDS.sleep(10);

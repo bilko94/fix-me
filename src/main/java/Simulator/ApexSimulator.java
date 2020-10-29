@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 
 public class ApexSimulator {
 
-
     public static void main(String[] args) throws InterruptedException, IOException {
         //executor
         ExecutorService executorService = Executors.newCachedThreadPool();

@@ -95,6 +95,7 @@ public class SocketService implements Runnable {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("disconnected");
         }
     }
 
@@ -115,30 +116,19 @@ public class SocketService implements Runnable {
     private void keyReadable(SelectionKey key) throws IOException {
         SocketChannel sc = (SocketChannel) key.channel();
         ByteBuffer bb = ByteBuffer.allocate(1024);
-        try {
-            sc.read(bb);
-        } catch (ConnectionResetException e) {
-            e.printStackTrace();
-            System.out.println("Server disconnected");
-            return;
-        }
+
+        sc.read(bb);
+
         String result = new String(bb.array()).trim();
         Packet response = new Packet(result);
         if (response.isValid())
             receivedBuffer.add(new Packet(result));
     }
 
-    private void keyWritable(SelectionKey key) {
+    private void keyWritable(SelectionKey key) throws IOException{
         String msg = getTransmissionMessage();
         SocketChannel sc = (SocketChannel) key.channel();
         ByteBuffer bb = ByteBuffer.wrap(msg.getBytes());
-        try {
-            sc.write(bb);
-        } catch (ClosedChannelException e) {
-            e.printStackTrace();
-            System.out.println("Server disconnected");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        sc.write(bb);
     }
 }
