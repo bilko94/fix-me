@@ -26,6 +26,7 @@ public class Main {
                 connection.sendMessage(requestMsg, marketID);
                 incomingResponse = connection.getResponseMessage();
                 while (incomingResponse == null){
+                    TimeUnit.MILLISECONDS.sleep(100);
                     incomingResponse = connection.getResponseMessage();
                 }
                 System.out.println("\n\n " + incomingResponse.message);
